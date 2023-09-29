@@ -233,6 +233,18 @@ export default class LWCDatatableCSS extends LightningElement {
 }
 ```
 
+- Align text in cellAttributes<br>
+`alignment` can be `left`,`right` or `center`
+```
+{
+  label: 'Account Name',
+  fieldName: 'Name',
+  cellAttributes: {
+    alignment: 'left'
+  }
+}
+```
+
 ## Dynamically Instantiate Components
 
 - To instantiate a dynamic component, a component's configuration file must include the lightning__dynamicComponent
@@ -294,7 +306,7 @@ export default class App extends LightningElement {
 ```
 
 **Make the dynamic imports statically analyzable**<br/>
-While not currently implemented, future framework optimizations can optimize code where dynamic imports are statically analyzable. Pass a JavaScript string literal to the import() function:
+While not currently implemented, future framework optimizations can optimize code where dynamic imports are statically analyzable. Pass a JavaScript string literal to the `import()` function:
 ```
 import("c/analyzable"); // 👍: Statically analyzable
 import("c/" + "analyzable"); // 👎: Not statically analyzable
@@ -339,8 +351,8 @@ export default class App extends LightningElement {
 
 ## lwc:spread - Spread Properties on Child Components
 
-The `lwc:spread` directive accepts one oject
-Use an object with key-value pairs, where the keys are property names
+The `lwc:spread` directive accepts one object.<br>
+Use an object with key-value pairs, where the keys are property names.
 
 App Component
 ```
@@ -487,5 +499,35 @@ To apply special rendering to the first and last items in the list, the code use
 .list-last {
   border-bottom: 1px solid black;
   padding-bottom: 5px;
+}
+```
+
+## Picklist Values of Object Field in LWC
+Using `getPicklistValues` and `getObjectInfo` from `'lightning/uiObjectInfoApi'`
+
+```
+import {LightningElement,wire} from 'lwc';
+import {getPicklistValues,getObjectInfo} from 'lightning/uiObjectInfoApi';
+import OBJECT_INFO from '@salesforce/schema/ObjectApiName';
+import FIELD_INFO from '@salesforce/schema/ObjectApiName.FieldApiName';
+export default class someLWCComponent extends LightningElement{
+  @track picklistOptions;
+
+  @wire(getObjectInfo,{
+    objectApiName: OBJECT_INFO
+  })
+  objectInfo;
+
+  @wire(getPicklistValues,{
+    recordTypeId: '$objectInfo.data.defaultRecordTypeId',
+    fieldApiName: FIELD_INFO
+  })
+  wirePicklist({error,data}){
+    if(data){
+      this.picklistOptions = data.values;
+    }else if(error){
+      console.log(error);
+    }
+  }
 }
 ```
