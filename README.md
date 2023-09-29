@@ -451,7 +451,7 @@ export default class HelloForEach extends LightningElement {
 ```
 ## Iterating with iterator lwc directive
 
-**To apply a special behavior to the first or last item in a list, use the iterator directive, iterator:iteratorName={array}. Use the iterator directive on a template tag.**
+**To apply a special behavior to the first or last item in a list, use the iterator directive, `iterator:iteratorName={array}`. Use the iterator directive on a template tag.**
 <br/>
 Use iteratorName to access these properties:
 
