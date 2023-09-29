@@ -258,9 +258,9 @@ To use this capability, you must set the apiVersion property to 55.0 or later.
 </template>
 ```
 
-- <lwc:component> serves as a placeholder in the DOM that renders the specified dynamic component. You must use <lwc:component> with the lwc:is directive.
-- The lwc:is directive provides an imported constructor at runtime to the <lwc:component> managed element. lwc:is accepts an expression that resolves to a LightningElement constructor at runtime.
-- If the constructor is false, the <lwc:component> tag along with all of its children aren't rendered.
+- `<lwc:component>` serves as a placeholder in the DOM that renders the specified dynamic component. You must use `<lwc:component>` with the lwc:is directive.
+- The `lwc:is` directive provides an imported constructor at runtime to the `<lwc:component>` managed element. `lwc:is` accepts an expression that resolves to a LightningElement constructor at runtime.
+- If the constructor is false, the `<lwc:component>` tag along with all of its children aren't rendered.
 - If the expression value is defined but not a LightningElement constructor, an error is thrown.
 - In the component's JavaScript file, import the custom element using the import() dynamic import syntax.
 
@@ -403,16 +403,16 @@ export default class extends LightningElement {
 <template lwc:elseif={expression_elseif2}></template>
 <template lwc:else></template>
 ```
-- Conditionally render DOM elements in a template. lwc:if, lwc:elseif, and lwc:else supersede the if:true and if:false directives.
+- Conditionally render DOM elements in a template. `lwc:if`, `lwc:elseif`, and `lwc:else` supersede the `if:true` and `if:false` directives.
 - Use the conditional directives on nested \<template> tags, \<div> tags or other HTML elements, and on your custom
 components tags like <c-custom-cmp>.
-- Both lwc:elseif and lwc:else must be immediately preceded by a sibling lwc:if or lwc:elseif.
-- The expression passed in to lwc:if and lwc:elseif supports simple dot notation. Complex expressions like `!condition`, `object?.property?.condition` or `sum % 2 === 1` aren't supported. To compute such expressions, use a getter in the JavaScript class.
-- You can't precede lwc:elseif or lwc:else with text or another element. Whitespace is ignored between the tags when the whitespace is a sibling of the conditional directive. 
+- Both `lwc:elseif` and `lwc:else` must be immediately preceded by a sibling `lwc:if` or `lwc:elseif`.
+- The expression passed in to `lwc:if` and `lwc:elseif` supports simple dot notation. Complex expressions like `!condition`, `object?.property?.condition` or `sum % 2 === 1` aren't supported. To compute such expressions, use a getter in the JavaScript class.
+- You can't precede `lwc:elseif` or `lwc:else` with text or another element. Whitespace is ignored between the tags when the whitespace is a sibling of the conditional directive. 
 
 ## for:each directive
-- When using the for:each directive, use for:item="currentItem" to access the current item. This example doesn’t use it, but to access the current item’s index, use for:index="index".
-- To assign a key to the first element in the nested template, use the key={uniqueId} directive.
+- When using the `for:each` directive, use `for:item="currentItem"` to access the current item. This example doesn’t use it, but to access the current item’s index, use `for:index="index"`.
+- To assign a key to the first element in the nested template, use the `key={uniqueId}` directive.
 
 ```
 <!-- helloForEach.html -->
@@ -455,12 +455,12 @@ export default class HelloForEach extends LightningElement {
 <br/>
 Use iteratorName to access these properties:
 
-- value—The value of the item in the list. Use this property to access the properties of the array. For example, {iteratorName}.value.{propertyName}.
-- index—The index of the item in the list.
-- first—A boolean value indicating whether this item is the first item in the list.
-- last—A boolean value indicating whether this item is the last item in the list.
+- `value` — The value of the item in the list. Use this property to access the properties of the array. For example, `{iteratorName}.value.{propertyName}`.
+- `index` — The index of the item in the list.
+- `first`— A boolean value indicating whether this item is the first item in the list.
+- `last` — A boolean value indicating whether this item is the last item in the list.
 
-To apply special rendering to the first and last items in the list, the code uses the first and last properties with the lwc:if directive.
+To apply special rendering to the first and last items in the list, the code uses the first and last properties with the `lwc:if` directive.
 - If the item is first in the list, the \<div> tag renders with the styling defined in the CSS list-first class.
 - If the item is last in the list, the \<div> tag renders with the styling defined in the CSS list-last class.
 
