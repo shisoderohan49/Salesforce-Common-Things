@@ -81,6 +81,12 @@ for (ID idKey : m.keyset()) {
 
 # Lightning Web Components
 
+<details>
+  <summary>List of Contents</summary>
+
+  - [Picklist Values of Object Field In LWC](#picklist-values-of-object-field-in-lwc)
+</details>
+
 ## Row Selection in Lightning-Datatable Miscellanious Things
 HTML Element
 ```
