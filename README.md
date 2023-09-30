@@ -97,6 +97,8 @@ for (ID idKey : m.keyset()) {
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
+[Back to List of Contents](#lightning-web-components)
+
 HTML Element
 ```
 <div class="slds-var-p-around_small" style="height: 300px">
@@ -157,6 +159,7 @@ handleRowSelection(event){
 ```
 
 ## Show Toast Function
+[Back to List of Contents](#lightning-web-components)
 
 Import Statement
 ```
@@ -176,6 +179,7 @@ showToast(title, message, variant) {
 ```
 
 ## Hyperlink Record in lightning-datatable
+[Back to List of Contents](#lightning-web-components)
 
 ```
 columns = [
@@ -205,6 +209,8 @@ tableData[i].fieldNameURLLink = '/' + recordId;
 | _self |	Opens the linked document in the same frame as it was clicked (this is default)|
 
 ## Applying Styles to Lightning Datatable
+[List of Contents](#lightning-web-components)
+
 ```
 const columns = [
     {
@@ -261,6 +267,7 @@ export default class LWCDatatableCSS extends LightningElement {
 ```
 
 ## Dynamically Instantiate Components
+[Back to List of Contents](#lightning-web-components)
 
 - To instantiate a dynamic component, a component's configuration file must include the lightning__dynamicComponent
 capability.
@@ -365,6 +372,7 @@ export default class App extends LightningElement {
 ```
 
 ## lwc:spread - Spread Properties on Child Components
+[Back to List of Contents](#lightning-web-components)
 
 The `lwc:spread` directive accepts one object.<br>
 Use an object with key-value pairs, where the keys are property names.
@@ -424,6 +432,7 @@ export default class extends LightningElement {
 
 
 ## lwc:if|elseif={expression} and lwc:else Conditional Rendering
+[Back to List of Contents](#lightning-web-components)
 ```
 <template lwc:if={expression}></template>
 <template lwc:elseif={expression_elseif1}></template>
@@ -477,6 +486,7 @@ export default class HelloForEach extends LightningElement {
 }
 ```
 ## Iterating with iterator lwc directive
+[Back to List of Contents](#lightning-web-components)
 
 **To apply a special behavior to the first or last item in a list, use the iterator directive, `iterator:iteratorName={array}`. Use the iterator directive on a template tag.**
 <br/>
@@ -518,6 +528,8 @@ To apply special rendering to the first and last items in the list, the code use
 ```
 
 ## Picklist Values of Object Field in LWC
+[Back to List of Contents](#lightning-web-components)
+
 Using `getPicklistValues` and `getObjectInfo` from `'lightning/uiObjectInfoApi'`
 
 ```
