@@ -83,7 +83,16 @@ for (ID idKey : m.keyset()) {
 
 <details>
   <summary>List of Contents</summary>
-
+  
+  - [Row Selection in Lightning-Datatable Miscellanious Things](#row-selection-in-lightning-datatable-miscellanious-things)
+  - [Show Toast Function](#show-toast-function)
+  - [Hyperlink Record in lightning-datatable](#hyperlink-record-in-lightning-datatable)
+  - [Applying Styles to Lightning Datatable](#applying-styles-to-lightning-datatable)
+  - [Dynamically Instantiate Components](#dynamically-instantiate-components)
+  - [lwc:spread - Spread Properties on Child Components](#lwcspread---spread-properties-on-child-components)
+  - [lwc:if|elseif={expression} and lwc:else Conditional Rendering](#lwcifelseifexpression-and-lwcelse-conditional-rendering)
+  - [for:each directive](#foreach-directive)
+  - [Iterating with iterator lwc directive](#iterating-with-iterator-lwc-directive)
   - [Picklist Values of Object Field In LWC](#picklist-values-of-object-field-in-lwc)
 </details>
 
