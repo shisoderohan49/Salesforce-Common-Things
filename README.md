@@ -447,6 +447,8 @@ components tags like <c-custom-cmp>.
 - You can't precede `lwc:elseif` or `lwc:else` with text or another element. Whitespace is ignored between the tags when the whitespace is a sibling of the conditional directive. 
 
 ## for:each directive
+[Back to List of Contents](#lightning-web-components)
+
 - When using the `for:each` directive, use `for:item="currentItem"` to access the current item. This example doesn’t use it, but to access the current item’s index, use `for:index="index"`.
 - To assign a key to the first element in the nested template, use the `key={uniqueId}` directive.
 
