@@ -717,6 +717,9 @@ In Body Tab for the POST Request
 |username|YOUR_SALESFORCE_USERNAME|
 |password|YOUR_SALESFORCE_PASSWORD + YOUR_SALESFORCE_SECURITY_TOKEN|
 
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/d201ab3d-1378-4865-9a98-4315820a6931)
+
+
 * Receive the Access Token in the Response Body
 
 ![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/65d2736f-27fa-411c-8a49-efa3ab2f6bad)
