@@ -108,6 +108,8 @@ for (ID idKey : m.keyset()) {
   - [for:each directive](#foreach-directive)
   - [Iterating with iterator lwc directive](#iterating-with-iterator-lwc-directive)
   - [Picklist Values of Object Field In LWC](#picklist-values-of-object-field-in-lwc)
+  - [Access Record, Object Context and Component Width-Aware When Component used on a Lightning Record Page](#access-record-object-context-and-component-width-aware-when-component-used-on-a-lightning-record-page)
+  - [Access Record, Object Context When Component Used in Experience Builder Sites](#access-record-object-context-when-component-used-in-experience-builder-sites)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -573,4 +575,56 @@ export default class someLWCComponent extends LightningElement{
     }
   }
 }
+```
+
+## Access Record, Object Context and Component Width-Aware When Component used on a Lightning Record Page
+[Back to List of Contents](#lightning-web-components)
+
+- If a lightning web component with a recordId property is used on a Lightning record page, then the page sets recordId to the 18-character ID of the record. Create a public recordId property by declaring it using @api decorator.
+```
+@api recordId;
+```
+
+- If a lightning web component with an objectApiName property is used on a Lightning record page, then the page sets the API name of the object associated with the record being viewed. Create a public objectApiName property by declaring it using the @api decorator.
+```
+@api objectApiName;
+```
+
+- If a lightning web component with a flexipageRegionWidth property is used on a Lightning record page, then the page pass the region’s width to the component. Create a public flexipageRegionWidth property by declaring it using @api decorator.
+```
+@api flexipageRegionWidth;
+```
+
+## Access Record, Object Context When Component Used in Experience Builder Sites
+[Back to List of Contents](#lightning-web-components)
+
+Unlike lightning record pages Experience Builder Sites do not automatically bind the recordId and objectApiName to the component’s template.
+
+To access the record Id of the current record you have to add recordId and objectApiName in an expression in the component’s *.js-meta.xml file. 
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightningCommunity__Default</target>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property
+                name="recordId"
+                type="String"
+                label="Record Id"
+                description="Pass the page's record id to the component variable"
+                default="{!recordId}" />
+            <property
+                name="objectApiName"
+                type="String"
+                label="Object Name"
+                description="Pass the page's object name to the component variable"
+                default="{!objectApiName}" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
 ```
