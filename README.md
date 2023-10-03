@@ -1,8 +1,20 @@
 # Salesforce-Common-Things
 
+- [Apex](#apex)
+- [Lightning Web Components](#lightning-web-components)
+
 # Apex
+[Back to main](#salesforce-common-things)
+<details>
+  <summary>List of Contents</summary>
+  
+  - [Getting List of picklist values for a picklist field of a Object](#getting-list-of-picklist-values-for-a-picklist-field-of-a-object)
+  - [Getting List of all possible picklist values for a non-picklist field of a Object (AggregateResult)](#getting-list-of-all-possible-picklist-values-for-a-non-picklist-field-of-a-object-aggregateresult)
+  - [Auto-Populating Map Entries from a SOQL Query](#auto-populating-map-entries-from-a-soql-query)
+</details>
 
 ## Getting List of picklist values for a picklist field of a Object
+[Back to List of Contents](#apex)
 
 ```
 Schema.DescribeFieldResult F = Object_Name.Field_API_Name.getDescribe();
@@ -37,6 +49,7 @@ return activePicklistValues;
 ```
 
 ## Getting List of all possible picklist values for a non-picklist field of a Object (AggregateResult)
+[Back to List of Contents](#apex)
 
 ```
 List<SelectOptionCustom> options = new List<SelectOptionCustom>{new SelectOptionCustom('--None--','')};
@@ -68,6 +81,7 @@ return options;
 ```
 
 ## Auto-Populating Map Entries from a SOQL Query
+[Back to List of Contents](#apex)
 
 ```
 // Populate map from SOQL query
@@ -80,7 +94,7 @@ for (ID idKey : m.keyset()) {
 ```
 
 # Lightning Web Components
-
+[Back to main](#salesforce-common-things)
 <details>
   <summary>List of Contents</summary>
   
