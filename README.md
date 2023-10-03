@@ -687,3 +687,36 @@ To access the record Id of the current record you have to add recordId and objec
     </targetConfigs>
 </LightningComponentBundle>
 ```
+# Miscellanious
+
+## Generate Salesforce Authentication Token Using Postman
+
+* Set up a connected app in Salesforce
+
+* Get Consumer details from Connected App (consumer key and consumer secret)
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/df6084b2-cbfd-4305-886e-02670d183b43)
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/670264bb-00ff-4c3e-b844-448488df59e5)
+
+* Get Security Token from Personal User Settings
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/5df17d45-f666-4014-9c0c-3fa9a07d3b4b)
+
+* Create POSTMAN Request
+
+POST Request
+
+Authentication URL: https://login.salesforce.com/services/oauth2/token
+(https://test.salesforce.com/services/oauth2/token for sandbox org)
+
+In Body Tab for the POST Request
+
+|Field|Value|
+|:------:|:------|
+|grant_type|password|
+|client_id|CONSUMER_KEY|
+|client_secret|CONSUMER_SECRET|
+|username|YOUR_SALESFORCE_USERNAME|
+|password|YOUR_SALESFORCE_PASSWORD + YOUR_SALESFORCE_SECURITY_TOKEN|
+
+* Receive the Access Token in the Response Body
+
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/65d2736f-27fa-411c-8a49-efa3ab2f6bad)
