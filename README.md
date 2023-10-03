@@ -11,6 +11,7 @@
   - [Getting List of picklist values for a picklist field of a Object](#getting-list-of-picklist-values-for-a-picklist-field-of-a-object)
   - [Getting List of all possible picklist values for a non-picklist field of a Object (AggregateResult)](#getting-list-of-all-possible-picklist-values-for-a-non-picklist-field-of-a-object-aggregateresult)
   - [Auto-Populating Map Entries from a SOQL Query](#auto-populating-map-entries-from-a-soql-query)
+  - [Dynamic SOQL with Database.query and Database.queryWithBinds](#dynamic-soql-with-databasequery-and-databasequerywithbinds)
 </details>
 
 ## Getting List of picklist values for a picklist field of a Object
@@ -91,6 +92,64 @@ for (ID idKey : m.keyset()) {
     Account a = m.get(idKey);
     System.debug(a);
 }
+```
+
+## Dynamic SOQL with Database.query and Database.queryWithBinds
+[Back to List of Contents](#apex)
+
+Dynamic SOQL refers to the creation of a SOQL string at run time with Apex code. 
+
+**query(queryString,accessLevel)**<br/>
+You can use simple bind variables in dynamic SOQL query strings when using Database.query. The following is allowed:
+```
+String myTestString = 'TestName';
+List<sObject> sobjList = Database.query('SELECT Id FROM MyCustomObject__c WHERE Name = :myTestString');
+```
+
+However, unlike inline SOQL, you can’t use bind variable fields in the query string with Database.query. The following
+example isn’t supported and results in a **Variable does not exist** error.
+```
+MyCustomObject__c myVariable = new MyCustomObject__c(field1__c ='TestField');
+List<sObject> sobjList = Database.query('SELECT Id FROM MyCustomObject__c WHERE field1__c = :myVariable.field1__c');
+```
+
+You can instead resolve the variable field into a string and use the string in your dynamic SOQL query:
+```
+String resolvedField1 = myVariable.field1__c;
+List<sObject> sobjList = Database.query('SELECT Id FROM MyCustomObject__c WHERE field1__c =  :resolvedField1');
+```
+---
+**queryWithBinds(queryString, bindMap, accessLevel)**<br/>
+Creates a dynamic SOQL query at runtime. Bind variables in the query are resolved from the bindMap Map parameter directly with the key, rather than from Apex code variables.<br/>
+`public static List<SObject> queryWithBinds(String queryString, Map<String, Object> bindMap, System.AccessLevel accessLevel)`
+
+- `queryString`<br/>
+SOQL query that includes Apex bind variables or expressions preceded by a colon. All bind variables must have a key in the bindMap Map.
+- `bindMap`<br/>
+A map that contains keys for each bind variable specified in the SOQL queryString and its value. The keys can’t be null or duplicates, and the values can’t be null or empty strings.
+- `accessLevel`<br/>
+The accessLevel parameter specifies whether the method runs in system mode (AccessLevel.SYSTEM_MODE) or user mode
+(AccessLevel.USER_MODE).<br/>
+In system mode, the object and field-level permissions of the current user are ignored, and the record sharing rules are
+controlled by the class sharing keywords.<br/>
+In user mode, the object permissions, field-level security, and sharing rules of the current user are enforced.
+```
+public static List<Account> simpleBindingSoqlQuery(Map<String, Object> bindParams) {
+    String queryString =
+        'SELECT Id, Name ' +
+        'FROM Account ' +
+        'WHERE name = :name';
+    return Database.queryWithBinds(
+        queryString,
+        bindParams,
+        AccessLevel.USER_MODE
+    );
+}
+
+String accountName = 'Acme Inc.';
+Map<String, Object> nameBind = new Map<String, Object>{'name' => accountName};
+List<Account> accounts = simpleBindingSoqlQuery(nameBind);
+System.debug(accounts);
 ```
 
 # Lightning Web Components
