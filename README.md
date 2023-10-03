@@ -2,6 +2,7 @@
 
 - [Apex](#apex)
 - [Lightning Web Components](#lightning-web-components)
+- [Miscellanious](#miscellanious)
 
 # Apex
 [Back to main](#salesforce-common-things)
@@ -688,6 +689,13 @@ To access the record Id of the current record you have to add recordId and objec
 </LightningComponentBundle>
 ```
 # Miscellanious
+[Back to main](#salesforce-common-things)
+
+<details>
+  <summary>List of Contents</summary>
+  
+  - [Generate Salesforce Authentication Token Using Postman](#generate-salesforce-authentication-token-using-postman)
+</details>
 
 ## Generate Salesforce Authentication Token Using Postman
 
