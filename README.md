@@ -170,6 +170,7 @@ System.debug(accounts);
   - [Picklist Values of Object Field In LWC](#picklist-values-of-object-field-in-lwc)
   - [Access Record, Object Context and Component Width-Aware When Component used on a Lightning Record Page](#access-record-object-context-and-component-width-aware-when-component-used-on-a-lightning-record-page)
   - [Access Record, Object Context When Component Used in Experience Builder Sites](#access-record-object-context-when-component-used-in-experience-builder-sites)
+  - [Picklist Custom Datatype for Lightning Datatable](#picklist-custom-datatype-for-lightning-datatable)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -742,6 +743,64 @@ To access the record Id of the current record you have to add recordId and objec
     </targetConfigs>
 </LightningComponentBundle>
 ```
+
+## Picklist Custom Datatype for Lightning Datatable
+[Back to List of Contents](#lightning-web-components)
+
+Originally taken from [TechDicer](https://techdicer.com/picklist-in-lwc-datatable-inline-edit/)
+
+Template<br/>
+`picklistColumn.html`
+```
+<template>
+    <span class="slds-truncate" title={value}>
+        {value}
+    </span>
+</template>
+```
+
+Edit Template<br/>
+`picklistStatic.html`
+```
+<template>
+  <lightning-combobox
+    name="picklist"
+    data-inputable="true"
+    label={typeAttributes.label}
+    value={editedValue}
+    placeholder={typeAttributes.placeholder}
+    options={typeAttributes.options}
+    variant="label-hidden"
+  ></lightning-combobox>
+</template>
+```
+
+HTML FILE<br/>
+`lWCCustomDatatableType.html`
+```
+<template>
+</template>
+```
+
+JS File<br/>
+`lWCCustomDatatableType.js`
+```
+import LightningDatatable from 'lightning/datatable';
+import picklistColumn from './picklistColumn.html';
+import picklistStatic from './picklistStatic.html';
+
+export default class LWCCustomDatatableType extends LightningDatatable {
+    static customTypes = {
+        picklistColumn: {
+            template: picklistStatic,
+            editTemplate: picklistColumn,
+            standardCellLayout: true,
+            typeAttributes: ['label','placeholder','options','value','context','variant','name']
+        }
+    }
+}
+```
+
 # Miscellanious
 [Back to main](#salesforce-common-things)
 
