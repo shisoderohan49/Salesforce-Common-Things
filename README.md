@@ -637,6 +637,60 @@ export default class someLWCComponent extends LightningElement{
 }
 ```
 
+---
+**2nd Method**
+
+Apex Class
+```
+public class AccountDataController{
+  @AuraEnabled
+  public static List<SelectOptionCustom> getTypePicklistValues(){
+    Schema.DescribeFieldResult typeFieldResult = Account.Type.getDescribe();
+    List<Schema.PicklistEntry> picklistEntries = typeFieldResult.getPicklistValues();
+
+    List<SelectOptionCustom> activePicklistValues = new List<SelectOptionCustom>();
+    for(Schema.PicklistEntry entry: picklistEntries){
+      if(entry.isActive()){
+        activePicklistValues.add(new SelectOptionCustom(entry.getLabel(),entry.getValue()));
+      }
+    }
+
+    return activePicklistValues;
+  }
+
+  public class SelectOptionCustom{
+    @AuraEnabled
+    public String label;
+
+    @AuraEnabled
+    public String value;
+
+    public SelectOptionCustom(String label,String value){
+      this.label = label;
+      this.value = value;
+    }
+  }
+}
+```
+
+In LWC
+```
+import getTypePicklistValues from '@salesforce/apex/AccountDataController.getTypePicklistValues';
+//imports ....
+export default class CustomLWCComponent extends LightningElement{
+  //code ...
+  picklistOptions = [];
+  initializeData(){
+    getTypePicklistValues()
+    .then(data => {
+      this.picklistOptions = data;
+      console.log('this.picklistOptions',this.picklistOptions);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+```
 ## Access Record, Object Context and Component Width-Aware When Component used on a Lightning Record Page
 [Back to List of Contents](#lightning-web-components)
 
