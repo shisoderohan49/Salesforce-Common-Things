@@ -177,8 +177,6 @@ System.debug(accounts);
 ## Row Selection in Lightning-Datatable Miscellanious Things
 [Back to List of Contents](#lightning-web-components)
 
-![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/252cd4b7-5e6c-4b4d-95f3-ea0f5f5d20a8)
-
 HTML Element
 ```
 <div class="slds-var-p-around_small" style="height: 300px">
@@ -806,6 +804,8 @@ export default class LWCCustomDatatableType extends LightningDatatable {
 
 ## Cancel Changes of a single row in LightningDatatable Inline Edit
 [Back to List of Contents](#lightning-web-components)
+
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/252cd4b7-5e6c-4b4d-95f3-ea0f5f5d20a8)
 
 The LightningDatatable or the extended LightningDatatable in HTML
 ```
