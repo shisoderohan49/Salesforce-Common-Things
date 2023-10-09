@@ -171,10 +171,13 @@ System.debug(accounts);
   - [Access Record, Object Context and Component Width-Aware When Component used on a Lightning Record Page](#access-record-object-context-and-component-width-aware-when-component-used-on-a-lightning-record-page)
   - [Access Record, Object Context When Component Used in Experience Builder Sites](#access-record-object-context-when-component-used-in-experience-builder-sites)
   - [Picklist Custom Datatype for Lightning Datatable](#picklist-custom-datatype-for-lightning-datatable)
+  - [Cancel Changes of a single row in LightningDatatable Inline Edit](#cancel-changes-of-a-single-row-in-lightningdatatable-inline-edit)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
 [Back to List of Contents](#lightning-web-components)
+
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/252cd4b7-5e6c-4b4d-95f3-ea0f5f5d20a8)
 
 HTML Element
 ```
@@ -797,6 +800,116 @@ export default class LWCCustomDatatableType extends LightningDatatable {
             standardCellLayout: true,
             typeAttributes: ['label','placeholder','options','value','context','variant','name']
         }
+    }
+}
+```
+
+## Cancel Changes of a single row in LightningDatatable Inline Edit
+[Back to List of Contents](#lightning-web-components)
+
+The LightningDatatable or the extended LightningDatatable in HTML
+```
+<c-l-w-c-custom-datatable-type
+          key-field="Id"
+          data={data}
+          columns={columns}
+          onvalueselect={handleSelection}
+          draft-values={draftValues}
+          oncellchange={handleCellChange}
+          onrowaction={callRowAction}
+          onsave={handleSave}
+          oncancel={handelCancel}
+          hide-checkbox-column
+></c-l-w-c-custom-datatable-type>
+```
+
+Let the apex function for updating the records be imported in the JS file
+```
+@AuraEnabled
+public static List<Account> updateAccountRecords(String wrapperText){
+    List<Account> accountList = (List<Account>)JSON.deserialize(wrapperText, List<Account>.class);
+    System.debug('wrapperText : ' + wrapperText);
+    update accountList;
+    return accountList;
+}
+```
+`import updateAccountRecords from '@salesforce/apex/AccountDataController.updateAccountRecords';`
+
+Columns in JS File
+```
+columns = [
+  //...
+  {
+    type: 'button',
+    fixedWidth: 50,
+    label: '',
+    typeAttributes: {
+      name: "removeFromDraftValues",
+      disabled: false,
+      iconName: 'utility:delete',
+      variant: 'base'
+    },
+    cellAttributes: {
+      alignment: 'center'
+    }
+]
+```
+
+Make all draftValues array empty when user cancels inline edit
+```
+handleCancel(event){
+  this.draftValues = [];
+}
+```
+
+on save event 
+- update the records in Salesforce with Imperative Apex 
+- update the respective row in data array with the new field values
+- make draft values array empty
+```
+handleSave(event){
+  Promise.resolve()
+  .then(() => {
+      console.log('handleSave event',JSON.parse(JSON.stringify(event.detail)));
+      let newAccountValues = event.detail.draftValues;
+      return updateAccountRecords({wrapperText: JSON.stringify(newAccountValues)});
+  })
+  .then((result) => {
+      console.log('updateAccountValues result : ',result);
+      result.forEach(element => {
+        let index = this.data.findIndex(ele => ele.Id === element.Id);
+        for(let property in element){
+          (this.data[index])[property] = element[property];
+        }
+      });
+      this.template.querySelector('c-l-w-c-custom-datatable-type').draftValues = [];
+  })
+  .catch((error) => {
+      console.log('error : ',error);
+  })
+}
+```
+
+onrowaction event handler
+```
+callRowAction(event){
+  let actionName = event.detail.action.name;
+  let eventDetail = JSON.parse(JSON.stringify(event.detail));
+  console.log('event.detail',eventDetail);
+  switch(actionName){
+    case "removeFromDraftValues":
+      this.removeFromDraftValuesAction(eventDetail);
+  }
+}
+```
+
+onrowaction helper function - removeFromDraftValuesAction
+```
+removeFromDraftValues(eventDetail){
+    let draftValues = this.template.querySelector('c-l-w-c-custom-datatable-type').draftValues;
+    if(draftValues.some(e => e.Id === eventDetail.row.Id)){
+      var newValues = [...draftValues].filter(e => e.Id !== eventDetail.row.Id);
+      this.template.querySelector('c-l-w-c-custom-datatable-type').draftValues = newValues;
     }
 }
 ```
