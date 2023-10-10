@@ -3,6 +3,7 @@
 - [Apex](#apex)
 - [Lightning Web Components](#lightning-web-components)
 - [Miscellanious](#miscellanious)
+- [Javascript Miscellanious](#javascript-miscellanious)
 
 # Apex
 [Back to main](#salesforce-common-things)
@@ -957,3 +958,29 @@ In Body Tab for the POST Request
 * Receive the Access Token in the Response Body
 
 ![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/65d2736f-27fa-411c-8a49-efa3ab2f6bad)
+
+# Javascript Miscellanious
+[Back to main](#salesforce-common-things)
+
+<details>
+  <summary>List of Contents</summary>
+  
+  - [Extract only selected keys from array of objects](#extract-only-selected-keys-from-array-of-objects)
+</details>
+
+## Extract only selected keys from array of objects
+
+```
+function extractKeys(arrayToBeMapped,keys){
+    let result = arrayToBeMapped.map(element => {
+        var newObject = {};
+        keys.forEach(key => {
+            if(typeof(element[key]) != undefined && element[key]!= null){
+                newObject[key] = element[key];
+            }
+        });
+        return newObject;
+    });
+    return Array.from(result);
+}
+```
