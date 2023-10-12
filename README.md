@@ -966,9 +966,11 @@ In Body Tab for the POST Request
   <summary>List of Contents</summary>
   
   - [Extract only selected keys from array of objects](#extract-only-selected-keys-from-array-of-objects)
+  - [Generate Array for sequence of numbers](#generate-array-for-sequence-of-numbers)
 </details>
 
 ## Extract only selected keys from array of objects
+[Back to List of Contents](#javascript-miscellanious)
 
 ```
 function extractKeys(arrayToBeMapped,keys){
@@ -982,5 +984,14 @@ function extractKeys(arrayToBeMapped,keys){
         return newObject;
     });
     return Array.from(result);
+}
+```
+
+## Generate Array for sequence of numbers 
+[Back to List of Contents](#javascript-miscellanious)
+
+```
+function generateSequence(num){
+  return Array.from(new Array(num + 1).keys()).slice(1);
 }
 ```
