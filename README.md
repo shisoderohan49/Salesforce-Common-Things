@@ -173,6 +173,7 @@ System.debug(accounts);
   - [Access Record, Object Context When Component Used in Experience Builder Sites](#access-record-object-context-when-component-used-in-experience-builder-sites)
   - [Picklist Custom Datatype for Lightning Datatable](#picklist-custom-datatype-for-lightning-datatable)
   - [Cancel Changes of a single row in LightningDatatable Inline Edit](#cancel-changes-of-a-single-row-in-lightningdatatable-inline-edit)
+  - [Implement Infinite Table Loading in a normal HTML Table in LWC](#implement-infinite-table-loading-in-a-normal-html-table-in-lwc)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -911,6 +912,34 @@ removeFromDraftValues(eventDetail){
     if(draftValues.some(e => e.Id === eventDetail.row.Id)){
       var newValues = [...draftValues].filter(e => e.Id !== eventDetail.row.Id);
       this.template.querySelector('c-l-w-c-custom-datatable-type').draftValues = newValues;
+    }
+}
+```
+
+
+## Implement Infinite Table Loading in a normal HTML Table in LWC
+[Back to List of Contents](#lightning-web-components)
+
+```
+//Infinite loading for Table
+renderedCallback(){
+    const tableDiv = this.template.querySelector('.tableFixHead');
+    tableDiv.addEventListener(
+        'scroll',
+        () => {
+            if(Math.abs(tableDiv.scrollHeight - tableDiv.clientHeight - tableDiv.scrollTop) < 1){
+                this.loadMoreChowRecords();
+            }
+        },
+        {
+            passive: true,
+        }
+    )
+}
+
+loadMoreChowRecords(){
+    if(this.displayedRecords.length < this.totalRecords.length){
+        this.displayedRecords = [...(this.totalRecords.slice(0,this.totalRecords.length + 100))]
     }
 }
 ```
