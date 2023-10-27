@@ -14,6 +14,7 @@
   - [Getting List of all possible picklist values for a non-picklist field of a Object (AggregateResult)](#getting-list-of-all-possible-picklist-values-for-a-non-picklist-field-of-a-object-aggregateresult)
   - [Auto-Populating Map Entries from a SOQL Query](#auto-populating-map-entries-from-a-soql-query)
   - [Dynamic SOQL with Database.query and Database.queryWithBinds](#dynamic-soql-with-databasequery-and-databasequerywithbinds)
+  - [Track status of fired Platform Events and implement subsequent business logic for failure and success events using Callbacks](#track-status-of-fired-platform-events-and-implement-subsequent-business-logic-for-failure-and-success-events-using-callbacks)
 </details>
 
 ## Getting List of picklist values for a picklist field of a Object
@@ -152,6 +153,32 @@ String accountName = 'Acme Inc.';
 Map<String, Object> nameBind = new Map<String, Object>{'name' => accountName};
 List<Account> accounts = simpleBindingSoqlQuery(nameBind);
 System.debug(accounts);
+```
+
+## Track status of fired Platform Events and implement subsequent business logic for failure and success events using Callbacks
+[Back to List of Contents](#apex)
+
+```
+public class SampleEventStatusCallback implements EventBus.EventPublishFailureCallback,EventBus.EventPublishSuccessCallback{
+  public void onFailure(EventBus.FailureResult result){
+    // Get Event UUIDs from the result
+    List<String> eventUuids = result.getEventUuids();
+    //.. code ..
+  }
+
+  public void onSuccess(EventBus.SuccessResult result){
+    //Get Event UUIDs from the result
+    List<String> eventUuids = result.getEventUuids();
+    //.. code ..
+  }
+}
+```
+
+```
+//apex code to fire the event
+List<Sample_Event__e> events = new List<Sample_Event__e>();
+events.add(new Sample_Event__e());
+EventBus.publish(events,SampleEventStatusCallback);
 ```
 
 # Lightning Web Components
