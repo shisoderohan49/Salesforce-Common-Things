@@ -15,6 +15,7 @@
   - [Auto-Populating Map Entries from a SOQL Query](#auto-populating-map-entries-from-a-soql-query)
   - [Dynamic SOQL with Database.query and Database.queryWithBinds](#dynamic-soql-with-databasequery-and-databasequerywithbinds)
   - [Track status of fired Platform Events and implement subsequent business logic for failure and success events using Callbacks](#track-status-of-fired-platform-events-and-implement-subsequent-business-logic-for-failure-and-success-events-using-callbacks)
+  - [Convert JSON Data to XML Data in Apex](#convert-json-data-to-xml-data-in-apex)
 </details>
 
 ## Getting List of picklist values for a picklist field of a Object
@@ -179,6 +180,38 @@ public class SampleEventStatusCallback implements EventBus.EventPublishFailureCa
 List<Sample_Event__e> events = new List<Sample_Event__e>();
 events.add(new Sample_Event__e());
 EventBus.publish(events,SampleEventStatusCallback);
+```
+
+## Convert JSON Data to XML Data in Apex
+[Back to List of Contents](#apex)
+
+```
+Map<String, Object> jsonData = (Map<String, Object>) JSON.deserializeUntyped(jsonBody);
+Dom.Document xmlDoc = new Dom.Document();
+Dom.XmlNode rootNode = xmlDoc.createRootElement('Records', null, null);
+// Extract the "records" array from the JSON
+List<Object> records = (List<Object>) jsonData.get('records');
+// Iterate through the records in the JSON array
+for (Object record : records) {
+    Map<String, Object> recordMap = (Map<String, Object>) record;
+    Dom.XmlNode recordNode = rootNode.addChildElement('Record', null, null);
+    // Iterate through the fields in each record
+    for (String field : recordMap.keySet()) {
+        Object value = recordMap.get(field);
+        Dom.XmlNode fieldNode = recordNode.addChildElement(field, null, null);
+        // If the value is a map, we need to handle nested elements
+        if (value instanceof Map<String, Object>) {
+            for (String subField : ((Map<String, Object>) value).keySet()) {
+                Dom.XmlNode subFieldNode = fieldNode.addChildElement(subField, null, null);
+                subFieldNode.addTextNode(String.valueOf(((Map<String, Object>) value).get(subField)));
+            }
+        } else {
+            fieldNode.addTextNode(String.valueOf(value));
+        }
+    }
+}
+String xmlString = xmlDoc.toXmlString();
+System.debug(xmlString);
 ```
 
 # Lightning Web Components
