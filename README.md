@@ -16,6 +16,7 @@
   - [Dynamic SOQL with Database.query and Database.queryWithBinds](#dynamic-soql-with-databasequery-and-databasequerywithbinds)
   - [Track status of fired Platform Events and implement subsequent business logic for failure and success events using Callbacks](#track-status-of-fired-platform-events-and-implement-subsequent-business-logic-for-failure-and-success-events-using-callbacks)
   - [Convert JSON Data to XML Data in Apex](#convert-json-data-to-xml-data-in-apex)
+  - [Parsing JSON String in Apex with JSONParser class](#parsing-json-string-in-apex-with-jsonparser-class)
 </details>
 
 ## Getting List of picklist values for a picklist field of a Object
@@ -213,6 +214,78 @@ for (Object record : records) {
 String xmlString = xmlDoc.toXmlString();
 System.debug(xmlString);
 ```
+
+## Parsing JSON String in Apex with JSONParser class
+[Back to List of Contents](#apex)
+
+```
+public class JSONParser {
+    public static void parseJSONString(String jsonString){
+        System.JSONParser parser = JSON.createParser(jsonString);
+        List<Invoice> invoiceList = new List<Invoice>();
+        while(parser.nextToken() != null){
+            if(parser.getText() == 'lineItems'){
+                if(parser.nextToken() == JSONToken.START_ARRAY){
+                    List<LineItem> lineItems = (List<LineItem>)parser.readValueAs(List<LineItem>.class);
+                    System.debug('lineItems : ' + lineItems);
+                    parser.skipChildren();
+                    Invoice inv = new Invoice();
+                    if(parser.nextToken() == JSONToken.FIELD_NAME && parser.getText() == 'invoiceNumber'){
+                        parser.nextToken();
+                        inv.invoiceNumber = parser.getLongValue();
+                        inv.lineItems = lineItems;
+                    }
+                    System.debug('Invoice Debug : ' + inv);
+                    invoiceList.add(inv);
+                }
+            }
+        }
+        return;
+    }    
+    
+    public class Invoice{
+        public Double totalPrice;
+        public DateTime statementDate;
+        public Long invoiceNumber;
+        List<LineItem> lineItems;
+        
+        public Invoice(){
+            
+        }
+        
+        public Invoice(Double price,DateTime statementDate,Long invoiceNumber,List<LineItem> liList){
+            this.totalPrice = price;
+            this.statementDate = statementDate;
+            this.invoiceNumber = invoiceNumber;
+            this.lineItems = liList;
+        }
+    }
+    public class LineItem{
+        public Double unitPrice;
+        public Double quantity;
+        public String productName;
+    }
+}
+```
+Execute Anonymous Window Code Execution
+```
+String jsonStr = 
+    '{"invoiceList":[' +
+    '{"totalPrice":5.5,"statementDate":"2011-10-04T16:58:54.858Z","lineItems":[' +
+    '{"UnitPrice":1.0,"Quantity":5.0,"ProductName":"Pencil"},' +
+    '{"UnitPrice":0.5,"Quantity":1.0,"ProductName":"Eraser"}],' +
+    '"invoiceNumber":1},' +
+    '{"totalPrice":11.5,"statementDate":"2011-10-04T16:58:54.858Z","lineItems":[' +
+    '{"UnitPrice":6.0,"Quantity":1.0,"ProductName":"Notebook"},' +
+    '{"UnitPrice":2.5,"Quantity":1.0,"ProductName":"Ruler"},' +
+    '{"UnitPrice":1.5,"Quantity":2.0,"ProductName":"Pen"}],"invoiceNumber":2}' +
+    ']}';
+
+JSONParser.parseJSONString(jsonStr);
+```
+
+[JSONParser Class Documentation](https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_JsonParser.htm#apex_System_JsonParser_readValueAs)
+[JSONToken Enum](https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_enum_System_JsonToken.htm)
 
 # Lightning Web Components
 [Back to main](#salesforce-common-things)
