@@ -1129,6 +1129,7 @@ In Body Tab for the POST Request
   
   - [Extract only selected keys from array of objects](#extract-only-selected-keys-from-array-of-objects)
   - [Generate Array for sequence of numbers](#generate-array-for-sequence-of-numbers)
+  - [Get all permutations of an array](#get-all-permutation-of-an-array)
 </details>
 
 ## Extract only selected keys from array of objects
@@ -1155,5 +1156,28 @@ function extractKeys(arrayToBeMapped,keys){
 ```
 function generateSequence(num){
   return Array.from(new Array(num + 1).keys()).slice(1);
+}
+```
+
+## Get all permutations of an array 
+[Back to List of Contents](#javascript-miscellanious)
+
+```
+function permutations(inputArr){
+    let result = [];
+    const permute = (arr,m = []) => {
+      if(arr.length === 0){
+        result.push(m);
+      } else {
+        for(let i = 0;i < arr.length; i++){
+          let curr = arr.slice();
+          let next = curr.splice(i,1);
+          permute(curr.slice(),m.concat(next));
+        }
+      }
+    }
+
+    permute(inputArr);
+    return result;
 }
 ```
