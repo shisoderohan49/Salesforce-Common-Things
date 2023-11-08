@@ -1129,7 +1129,7 @@ In Body Tab for the POST Request
   
   - [Extract only selected keys from array of objects](#extract-only-selected-keys-from-array-of-objects)
   - [Generate Array for sequence of numbers](#generate-array-for-sequence-of-numbers)
-  - [Get all permutations of an array](#get-all-permutation-of-an-array)
+  - [Get all permutations of an array](#get-all-permutations-of-an-array)
 </details>
 
 ## Extract only selected keys from array of objects
