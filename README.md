@@ -2,7 +2,7 @@
 
 - [Apex](#apex)
 - [Lightning Web Components](#lightning-web-components)
-- [Aura Web Components]()
+- [Aura Web Components](#aura-web-components)
 - [Miscellanious](#miscellanious)
 - [Javascript Miscellanious](#javascript-miscellanious)
 
@@ -1084,7 +1084,7 @@ loadMoreChowRecords(){
 <details>
   <summary>List of Contents</summary>
 
-  - [lightning:overlayLibrary to use for modals in Aura Components]()
+  - [lightning:overlayLibrary to use for modals in Aura Components](#lightningoverlaylibrary-to-use-for-modals-in-aura-components)
 </details>
 
 ## lightning:overlayLibrary to use for modals in Aura Components
