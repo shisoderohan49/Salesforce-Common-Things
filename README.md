@@ -2,6 +2,7 @@
 
 - [Apex](#apex)
 - [Lightning Web Components](#lightning-web-components)
+- [Aura Web Components]()
 - [Miscellanious](#miscellanious)
 - [Javascript Miscellanious](#javascript-miscellanious)
 
@@ -1076,6 +1077,127 @@ loadMoreChowRecords(){
     }
 }
 ```
+
+# Aura Web Components
+[Back to main](#salesforce-common-things)
+
+<details>
+  <summary>List of Contents</summary>
+
+  - [lightning:overlayLibrary to use for modals in Aura Components]()
+</details>
+
+## lightning:overlayLibrary to use for modals in Aura Components
+
+The lightning:overlayLib component provides access to methods you can use in your components to open and close modals and popovers.
+
+Include one <lightning:overlayLibrary aura:id="overlayLib"/> tag in the component that triggers the modal or popover, where aura:id is a unique local ID. Only one tag is needed in a component to open multiple messages.
+Include the tag also in a component that closes a modal or popover, even if it doesn't open them.
+
+an example of a component c:modalOpener that uses a button to open a modal. When clicked, the button displays a modal with a custom body that's defined in another component.<br/>
+**modalOpener.cmp**
+```
+<aura:component>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:button name="modal" label="Show Modal" onclick="{!c.handleShowModal}"/>
+</aura:component>
+```
+
+The modalOpenerController.js client-side controller displays the modal. To create and display a modal, pass in the modal parameters using component.find('overlayLib').showCustomModal(), where overlayLib matches the aura:id specified in the <lightning:overlayLibrary> tag in the component markup. This example dynamically creates a custom body using $A.createComponent().<br/>
+**modalOpenerController.js**
+```
+({
+    handleShowModal: function(component, evt, helper) {
+        var modalBody;
+        $A.createComponent("c:modalContent", {},
+           function(content, status) {
+               if (status === "SUCCESS") {
+                   modalBody = content;
+                   component.find('overlayLib').showCustomModal({
+                       header: "Application Confirmation",
+                       body: modalBody,
+                       showCloseButton: true,
+                       cssClass: "mymodal",
+                       closeCallback: function() {
+                           alert('You closed the alert!');
+                       }
+                   })
+               }
+           });
+    }
+})
+```
+
+c:modalContent is a custom component that displays an icon and message as shown in this markup.<br/>
+**modalContent.cmp**
+```
+<aura:component>
+    <lightning:icon size="medium" iconName="action:approval" alternativeText="Approved" />
+    Your application has been approved.
+</aura:component>
+```
+- The showCloseButton parameter when set to true causes the X close button to be displayed. The cssClass parameter specifies a class to apply to the modal.
+- Any custom CSS class you add with the cssClass parameter must be accompanied by the cMyCmp class, where c is your namespace and MyCmp is the name of the component that creates the modal. For this example, the class is cModalOpener. Adding this class ensures that the custom styling is properly scoped.
+- The closeCallback parameter causes a function to be called when the modal is closed. Firing an event is a typical use case.
+
+**Creating a Modal Footer**<br/>
+Pass in a footer for the modal by using the footer parameter. You can pass a string or a component to include buttons, for example. Here's a client-side controller that creates a custom body and custom footer using $A.createComponents().
+<br/>
+**modalOpenerController.js**
+```
+({
+    handleShowModalFooter : function (component, event, helper) {
+    var modalBody;
+    var modalFooter;
+    $A.createComponents([
+        ["c:modalContent",{}],
+        ["c:modalFooter",{}]
+    ],
+    function(components, status){
+        if (status === "SUCCESS") {
+            modalBody = components[0];
+            modalFooter = components[1];
+            component.find('overlayLib').showCustomModal({
+               header: "Application Confirmation",
+               body: modalBody,
+               footer: modalFooter,
+               showCloseButton: true,
+               cssClass: "my-modal,my-custom-class,my-other-class,cModalOpener",
+               closeCallback: function() {
+                   alert('You closed the alert!');
+               }
+           })
+        }
+    }
+   );
+  }
+})
+```
+c:modalFooter is a custom component that displays Cancel and OK buttons as shown in this markup. The footer component includes the <lightning:overlayLibrary aura:id="overlayLib"/> tag so it can call the notifyClose() method in the client-side controller.
+<br/>
+**modalFooter.cmp**
+```
+<aura:component>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:button name="cancel" label="Cancel" onclick="{!c.handleCancel}"/>
+    <lightning:button name="ok" label="OK" variant="brand" onclick="{!c.handleOK}"/>
+</aura:component>
+```
+modalFooterController.js defines what happens when you click the footer buttons. The handleCancel function uses the notifyClose() method from the overlay library.
+<br/>
+**modalFooterController.js**
+```
+({
+    handleCancel : function(component, event, helper) {
+        //closes the modal or popover from the component
+        component.find("overlayLib").notifyClose();
+    },
+    handleOK : function(component, event, helper) {
+        //do something
+    }
+})
+```
+showCustomModal() returns a promise, which is useful if you want to get a reference to the modal when it’s displayed. 
 
 # Miscellanious
 [Back to main](#salesforce-common-things)
