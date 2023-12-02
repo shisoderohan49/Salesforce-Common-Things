@@ -308,6 +308,7 @@ JSONParser.parseJSONString(jsonStr);
   - [Picklist Custom Datatype for Lightning Datatable](#picklist-custom-datatype-for-lightning-datatable)
   - [Cancel Changes of a single row in LightningDatatable Inline Edit](#cancel-changes-of-a-single-row-in-lightningdatatable-inline-edit)
   - [Implement Infinite Table Loading in a normal HTML Table in LWC](#implement-infinite-table-loading-in-a-normal-html-table-in-lwc)
+  - [Implement Picklist Dependencies between two field comboboxes in LWC](#implement-picklist-dependencies-between-two-field-comboboxes-in-lwc)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -1074,6 +1075,108 @@ renderedCallback(){
 loadMoreChowRecords(){
     if(this.displayedRecords.length < this.totalRecords.length){
         this.displayedRecords = [...(this.totalRecords.slice(0,this.totalRecords.length + 100))]
+    }
+}
+```
+
+## Implement Picklist Dependencies between two field comboboxes in LWC
+[Back to List of Contents](#lightning-web-components)
+
+In HTML
+
+```
+<lightning-combobox
+  name="grantType"
+  label="Grant Type"
+  value={grantTypeValue}
+  placeholder="Select a Grant Type from picklist"
+  options={grantTypeValues}
+  onchange={handleGrantTypeChange}
+  required>
+</lightning-combobox>
+<lightning-combobox
+  name="requestType"
+  label="Reason For Request"
+  value={requestForReasonValue}
+  placeholder="Select Reason For Request"
+  options={requestForReasonValues}
+  onchange={handleReasonChange} required>
+</lightning-combobox>
+
+```
+
+In LWC, import getObjectInfo and getPicklistValuesByRecordType
+```
+import OBJECT_REFERENCE from '@salesforce/schema/OBJECT_API_NAME';
+import { getObjectInfo, getPicklistValuesByRecordType } from 'lightning/uiObjectInfoApi';
+```
+In the defined Lightning Class `export default class ...`.
+```
+controllingPicklistValue;
+dependentPicklistValue;
+
+controllingPicklistOptions;
+dependentPicklistOptions;
+
+objectPicklistValues;
+
+//.... code ....
+@wire(getObjectInfo,{
+    objectApiName: OBJECT_REFERENCE
+})
+objectInfo;
+
+@wire(getPicklistValuesByRecordType,{
+    objectApiName: OBJECT_REFERENCE,
+    recordTypeId: '$objectInfo.data.defaultRecordTypeId'
+})
+wiredPicklistValues({error,data}){
+    if(data){
+        console.log('data : ',JSON.parse(JSON.stringify(data)));
+        this.objectPicklistValues = data.picklistFieldValues;
+        let controllingPicklistList = data.picklistFieldValues.CONTROLLING_FIELD_API_NAME.values;
+        let controllingPicklistValues = [];
+        for(let i = 0; i < controllingPicklistList.length; i++){
+            controllingPicklistValues.push({
+                label: controllingPicklistList[i].label,
+                value: controllingPicklistList[i].value
+            });
+        }
+        console.log('controllingPicklistValues: ',JSON.parse(JSON.stringify(controllingPicklistValues)));
+        this.controllingPicklistOptions = controllingPicklistValues;
+        console.log('this.controllingPicklistOptions: ',JSON.parse(JSON.stringify(this.controllingPicklistOptions)));
+    }else if(error){
+        console.log('error: ',JSON.parse(JSON.stringify(error)));
+    }
+}
+
+handleControllingFieldChange(event){
+    this.controllingPicklistValue = event.detail.value;
+    this.dependentPicklistValue = null;
+
+    console.log('this.controllingPicklistValue after change: ',JSON.parse(JSON.stringify(this.controllingPicklistValue)));
+    console.log('this.dependentPicklistValue: ',this.dependentPicklistValue);
+
+    if(this.controllingPicklistValue){
+        let totalDependentField = this.objectPicklistValues.DEPENDENT_FIELD_API_NAME;
+        console.log('totalDependentField: ',JSON.parse(JSON.stringify(totalDependentField)));
+        let controllerValueIndex = totalDependentField.controllerValues[this.controllingPicklistValue];
+        let totalDependentFieldValues = totalDependentField.values;
+        let dependentPicklistValues = [];
+        totalDependentFieldValues.forEach(key => {
+            for(let i = 0;i < key.validFor.length;i++){
+                if(controllerValueIndex == key.validFor[i]){
+                    dependentPicklistValues.push({
+                        label: key.label,
+                        value: key.value
+                    });
+                }
+            }
+        });
+        console.log('dependentPicklistValues: ',JSON.parse(JSON.stringify(dependentPicklistValues)));
+        if(dependentPicklistValues && dependentPicklistValues.length > 0){
+            this.dependentPicklistOptions = dependentPicklistValues;
+        }
     }
 }
 ```
