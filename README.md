@@ -309,6 +309,7 @@ JSONParser.parseJSONString(jsonStr);
   - [Cancel Changes of a single row in LightningDatatable Inline Edit](#cancel-changes-of-a-single-row-in-lightningdatatable-inline-edit)
   - [Implement Infinite Table Loading in a normal HTML Table in LWC](#implement-infinite-table-loading-in-a-normal-html-table-in-lwc)
   - [Implement Picklist Dependencies between two field comboboxes in LWC](#implement-picklist-dependencies-between-two-field-comboboxes-in-lwc)
+  - [Execute functions of Child LWC Components from Parent LWC Component](#execute-functions-of-child-lwc-components-from-parent-lwc-component)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -1179,6 +1180,28 @@ handleControllingFieldChange(event){
         }
     }
 }
+```
+
+## Execute functions of Child LWC Components from Parent LWC Component
+[Back to List of Contents](#lightning-web-components)
+
+Child LWC Component
+```
+export default class childLWCComponent extends LightningElement{
+    //... code ...
+    @api
+    executeSampleFunction(detail){
+        //code execution
+    }
+}
+```
+
+In Parent LWC Component, use this code wherever required.<br/>
+```
+let detailObj = {
+    //....
+}
+this.template.querySelector('c-child-l-w-c-component').executeFunction(detailObj);
 ```
 
 # Aura Web Components
