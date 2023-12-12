@@ -18,6 +18,8 @@
   - [Track status of fired Platform Events and implement subsequent business logic for failure and success events using Callbacks](#track-status-of-fired-platform-events-and-implement-subsequent-business-logic-for-failure-and-success-events-using-callbacks)
   - [Convert JSON Data to XML Data in Apex](#convert-json-data-to-xml-data-in-apex)
   - [Parsing JSON String in Apex with JSONParser class](#parsing-json-string-in-apex-with-jsonparser-class)
+  - [Enable Debug Mode for a User using Apex in Execute Anonymous Window](#enable-debug-mode-for-a-user-using-apex-in-execute-anonymous-window)
+  - [Reset password for a user easily using Apex in Execute Anonymous Window](#reset-password-for-a-user-easily-using-apex-in-execute-anonymous-window)
 </details>
 
 ## Getting List of picklist values for a picklist field of a Object
@@ -287,6 +289,31 @@ JSONParser.parseJSONString(jsonStr);
 
 [JSONParser Class Documentation](https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_JsonParser.htm#apex_System_JsonParser_readValueAs)
 [JSONToken Enum](https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_enum_System_JsonToken.htm)
+
+## Enable Debug Mode for a User using Apex in Execute Anonymous Window
+[Back to List of Contents](#apex)
+
+```
+User rohan = [SELECT Id,UserPreferencesUserDebugModePref FROM User WHERE Name = 'Rohan Shisode'];
+rohan.UserPreferencesUserDebugModePref = true;
+update rohan;
+System.debug('rohan details : ' + rohan);
+```
+
+## Reset password for a user easily using Apex in Execute Anonymous Window
+[Back to List of Contents](#apex)
+
+```
+User rohan = [SELECT Id FROM User WHERE Name = 'Rohan Shisode'];
+System.resetPassword(rohan.Id,true);
+```
+
+[System.resetPassword Reference](https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_system.htm#apex_System_System_resetPassword)<br/>
+When the user logs in with the new password, they are prompted to enter a new password, and to select a security question and answer if they haven't already.<br/>
+If you specify true for sendUserEmail, the user is sent an email notifying them that their password was reset. A link to sign onto Salesforce using the new password is included in the email.<br/> 
+Use `setPassword(userId, password)` if you don't want the user to be prompted to enter a new password when they log in.
+
+**Ensure that the email address that the user has is a valid email address**
 
 # Lightning Web Components
 [Back to main](#salesforce-common-things)
