@@ -337,6 +337,7 @@ Use `setPassword(userId, password)` if you don't want the user to be prompted to
   - [Implement Infinite Table Loading in a normal HTML Table in LWC](#implement-infinite-table-loading-in-a-normal-html-table-in-lwc)
   - [Implement Picklist Dependencies between two field comboboxes in LWC](#implement-picklist-dependencies-between-two-field-comboboxes-in-lwc)
   - [Execute functions of Child LWC Components from Parent LWC Component](#execute-functions-of-child-lwc-components-from-parent-lwc-component)
+  - [Implement Debouncing in Lightning Web Component](#implement-debouncing-in-lightning-web-component)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -1229,6 +1230,36 @@ let detailObj = {
     //....
 }
 this.template.querySelector('c-child-l-w-c-component').executeFunction(detailObj);
+```
+
+## Implement Debouncing in Lightning Web Component
+[Back to List of Contents](#lightning-web-components)
+
+Debouncing - Programming Practice used to ensure that time-consuming tasks do not fire so often, that it stalls the performance of the web page. In other words, it limits the rate at which a function is invoked.<br/>
+Debouncing is removing unwanted input noise from buttons, switches or other user input. Debouncing prevents extra activations or slow functions from triggering too often.
+
+HTML Component - input element
+```
+<input type="text" value={searchKey} onkeyup={handleKeyChange} onchange={handleKeyChange}/> 
+```
+
+JS Component
+```
+export default class LookupComponent extends LightningElement {
+    /* set up variables */
+    timer;
+
+    /* code */
+    handleKeyChange(event){
+        window.clearTimeout(this.timer);
+        const searchKey = event.target.value;
+        this.searchKey - searchKey;
+        this.timer = setTimeout(() => {
+            //processing code
+        },500);
+        //set up the time - 500ms according to your response needs
+    }
+}
 ```
 
 # Aura Web Components
