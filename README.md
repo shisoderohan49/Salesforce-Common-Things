@@ -1436,6 +1436,7 @@ In Body Tab for the POST Request
   - [Extract only selected keys from array of objects](#extract-only-selected-keys-from-array-of-objects)
   - [Generate Array for sequence of numbers](#generate-array-for-sequence-of-numbers)
   - [Get all permutations of an array](#get-all-permutations-of-an-array)
+  - [Group elements in an Array](#group-elements-in-an-array)
 </details>
 
 ## Extract only selected keys from array of objects
@@ -1485,5 +1486,143 @@ function permutations(inputArr){
 
     permute(inputArr);
     return result;
+}
+```
+## Group elements in an Array
+[Back to List of Contents](#javascript-miscellanious)
+
+1. Using the Object.groupBy(iterable,callbackFn) method
+2. Using the reduce function
+
+**Using the Object.groupBy method**
+
+- Just using a field as the grouping parameter
+
+```
+const inventory = [
+  { name: "asparagus", type: "vegetables", quantity: 5 },
+  { name: "bananas", type: "fruit", quantity: 0 },
+  { name: "goat", type: "meat", quantity: 23 },
+  { name: "cherries", type: "fruit", quantity: 5 },
+  { name: "fish", type: "meat", quantity: 22 },
+];
+
+const result = Object.groupBy(inventory,({type}) => type);
+```
+Result : 
+```
+{
+  vegetables: [
+    { name: 'asparagus', type: 'vegetables', quantity: 5 },
+  ],
+  fruit: [
+    { name: "bananas", type: "fruit", quantity: 0 },
+    { name: "cherries", type: "fruit", quantity: 5 }
+  ],
+  meat: [
+    { name: "goat", type: "meat", quantity: 23 },
+    { name: "fish", type: "meat", quantity: 22 }
+  ]
+}
+```
+
+- Using a callback function as the grouping parameter
+
+```
+const inventory = [
+  { name: "asparagus", type: "vegetables", quantity: 5 },
+  { name: "bananas", type: "fruit", quantity: 0 },
+  { name: "goat", type: "meat", quantity: 23 },
+  { name: "cherries", type: "fruit", quantity: 5 },
+  { name: "fish", type: "meat", quantity: 22 },
+];
+
+function myCallback({quantity}){
+    return quantity > 5 ? 'ok' : 'restock';
+}
+
+const result2 = Object.groupBy(inventory,myCallback);
+```
+Result : 
+```
+{
+  restock: [
+    { name: "asparagus", type: "vegetables", quantity: 5 },
+    { name: "bananas", type: "fruit", quantity: 0 },
+    { name: "cherries", type: "fruit", quantity: 5 }
+  ],
+  ok: [
+    { name: "goat", type: "meat", quantity: 23 },
+    { name: "fish", type: "meat", quantity: 22 }
+  ]
+}
+```
+
+**Using the reduce method**
+
+```
+const inventory = [
+  { name: "asparagus", type: "vegetables", quantity: 5 },
+  { name: "bananas", type: "fruit", quantity: 0 },
+  { name: "goat", type: "meat", quantity: 23 },
+  { name: "cherries", type: "fruit", quantity: 5 },
+  { name: "fish", type: "meat", quantity: 22 },
+];
+
+const result = inventory.reduce((acc,curr) => {
+    acc[curr['type']] = acc[curr['type']] || [];
+    acc[curr['type']].push(curr);
+    return acc;
+},Object.create(null));
+```
+Result : 
+```
+{
+  vegetables: [
+    { name: 'asparagus', type: 'vegetables', quantity: 5 },
+  ],
+  fruit: [
+    { name: "bananas", type: "fruit", quantity: 0 },
+    { name: "cherries", type: "fruit", quantity: 5 }
+  ],
+  meat: [
+    { name: "goat", type: "meat", quantity: 23 },
+    { name: "fish", type: "meat", quantity: 22 }
+  ]
+}
+```
+Using some other criteria than a field to group elements of an array
+```
+const inventory = [
+  { name: "asparagus", type: "vegetables", quantity: 5 },
+  { name: "bananas", type: "fruit", quantity: 0 },
+  { name: "goat", type: "meat", quantity: 23 },
+  { name: "cherries", type: "fruit", quantity: 5 },
+  { name: "fish", type: "meat", quantity: 22 },
+];
+
+let initialValue = {
+    ok: [],
+    restock: []
+};
+
+const result = inventory.reduce((acc,curr) => {
+    if(curr['quantity'] > 5) acc['ok'].push(curr);
+    else acc['restock'].push(curr);
+    return acc;
+},initialValue);
+```
+Result: 
+```
+{
+  restock: [
+    { name: "asparagus", type: "vegetables", quantity: 5 },
+    { name: "bananas", type: "fruit", quantity: 0 },
+    { name: "cherries", type: "fruit", quantity: 5 }
+  ],
+  ok: [
+    { name: "goat", type: "meat", quantity: 23 },
+    { name: "fish", type: "meat", quantity: 22 }
+  ]
 }
 ```
