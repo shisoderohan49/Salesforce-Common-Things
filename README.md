@@ -1392,6 +1392,7 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
 
   - [Get All Permission Set and Permission Set Group Assignments to a User](#get-all-permission-set-and-permission-set-group-assignments-to-a-user)
   - [Get All Permission Sets contained in a Permission Set Group](#get-all-permission-sets-contained-in-a-permission-set-group)
+  - [Get All Asynchronous Jobs filtered by the job's Status, Created By User,Apex Class Name, Job Type](#get-all-asynchronous-jobs-filtered-by-the-jobs-status-created-by-userapex-class-name-job-type)
 </details>
 
 ## Get All Permission Set and Permission Set Group Assignments to a User
@@ -1406,6 +1407,13 @@ SELECT Id,Assignee.Name,PermissionSetGroup.DeveloperName,PermissionSet.Name FROM
 
 ```
 SELECT PermissionSetGroup.DeveloperName,PermissionSet.Name FROM PermissionSetGroupComponent WHERE PermissionSetGroup.DeveloperName = 'PermissionSetGroupName'
+```
+
+## Get All Asynchronous Jobs filtered by the job's Status, Created By User,Apex Class Name, Job Type
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT Id,ApexClass.Name,Status,JobType,CreatedBy.Name FROM AsyncApexJob WHERE JobType IN ('ScheduledApex','BatchApex') AND CreatedBy.Name = 'USERNAME' AND ApexClass.Name = 'APEXCLASSNAME'
 ```
 
 # Miscellanious
