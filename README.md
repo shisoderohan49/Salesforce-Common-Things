@@ -1387,7 +1387,26 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
 # Useful SOQL Queries
 [Back to main](#salesforce-common-things)
 
+<details>
+  <summary>List of Contents</summary>
 
+  - [Get All Permission Set and Permission Set Group Assignments to a User](#get-all-permission-set-and-permission-set-group-assignments-to-a-user)
+  - [Get All Permission Sets contained in a Permission Set Group](#get-all-permission-sets-contained-in-a-permission-set-group)
+</details>
+
+## Get All Permission Set and Permission Set Group Assignments to a User
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT Id,Assignee.Name,PermissionSetGroup.DeveloperName,PermissionSet.Name FROM PermissionSetAssignment WHERE Assignee.Name = 'Rohan Shisode'
+```
+
+## Get All Permission Sets contained in a Permission Set Group
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT PermissionSetGroup.DeveloperName,PermissionSet.Name FROM PermissionSetGroupComponent WHERE PermissionSetGroup.DeveloperName = 'PermissionSetGroupName'
+```
 
 # Miscellanious
 [Back to main](#salesforce-common-things)
