@@ -3,6 +3,7 @@
 - [Apex](#apex)
 - [Lightning Web Components](#lightning-web-components)
 - [Aura Web Components](#aura-web-components)
+- [Useful SOQL Queries](#useful-soql-queries)
 - [Miscellanious](#miscellanious)
 - [Javascript Miscellanious](#javascript-miscellanious)
 
@@ -1382,6 +1383,11 @@ modalFooterController.js defines what happens when you click the footer buttons.
 })
 ```
 showCustomModal() returns a promise, which is useful if you want to get a reference to the modal when it’s displayed. 
+
+# Useful SOQL Queries
+[Back to main](#salesforce-common-things)
+
+
 
 # Miscellanious
 [Back to main](#salesforce-common-things)
