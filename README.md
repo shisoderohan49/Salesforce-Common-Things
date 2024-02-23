@@ -339,6 +339,7 @@ Use `setPassword(userId, password)` if you don't want the user to be prompted to
   - [Implement Picklist Dependencies between two field comboboxes in LWC](#implement-picklist-dependencies-between-two-field-comboboxes-in-lwc)
   - [Execute functions of Child LWC Components from Parent LWC Component](#execute-functions-of-child-lwc-components-from-parent-lwc-component)
   - [Implement Debouncing in Lightning Web Component](#implement-debouncing-in-lightning-web-component)
+  - [Implement Throttling](#implement-throttling)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -1261,6 +1262,48 @@ export default class LookupComponent extends LightningElement {
         //set up the time - 500ms according to your response needs
     }
 }
+```
+
+## Implement Throttling 
+[Back to List of Contents](#lightning-web-components)
+
+Throttling is a technique that limits how often a function can be called in a given period of time.
+It is useful for improving the performance and responsiveness of web pages that have event listeners that trigger heavy or expensive operations.
+
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/fa72d3cc-2f00-453b-9749-7ffd4b545d78)
+
+```
+function throttle(mainFunction,delay){
+    let timerFlag = null;// Variable to keep track of the timer
+    
+    // Returning a throttled version
+    return (...args) => {
+        if(timerFlag === null){ // If there is no timer currently running
+            mainFunction(...args); //Execute main function
+            timerFlag = setTimeout(() => { // Set a timer to clear the timerFlag after the specified delay
+                timerFlag = null; // Clear the timerFlag to allow the main function to be executed again
+            },delay);
+        }
+    }
+}
+```
+
+Use Case: 
+```
+//Define a function that fetches some data from an API
+function fetchData(){
+    console.log("Fetching data...");
+    //Simulate an API call with a random delay
+    setTimeout(() => {
+        console.log("Data fetched!");
+    },Math.random() * 1000);
+}
+
+//Throttle the fetchData function with a delay of 5000ms
+const throttledFetchData = throttle(fetchData,5000);
+
+//Add an event listener to the window scroll event that calls the throttledFetchData function
+window.addEventListener("scroll",throttledFetchData);
 ```
 
 # Aura Web Components
