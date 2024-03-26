@@ -1506,13 +1506,13 @@ In Body Tab for the POST Request
 
 ## Profile Error Due to Access Granted to Salesforce Licensed Custom Objects (LCO)
 
-Beginning in the Winter '21 releases for CPQ and Advanced Approvals (AA), profiles are no longer able to grant access to any Salesforce Licensed Custom Objects (LCO). To interact with CPQ or AA related objects, users are required to have Permission Set Licenses (PSL) assigned. Validation error messages will appear when editing permissions in profiles or permission sets in 228 if any user belonging to the group does not have an appropriate license.
+Beginning in the Winter '21 releases for CPQ and Advanced Approvals (AA), profiles are no longer able to grant access to any Salesforce Licensed Custom Objects (LCO). To interact with CPQ or AA related objects, users are required to have Permission Set Licenses (PSL) assigned. Validation error messages will appear when editing permissions in profiles or permission sets in 228 if any user belonging to the group does not have an appropriate license.<br/>
+
+`ERROR:  [PERMISSION NAME] on [OBJECT NAME] can't be granted. Grant the permission using a permission set with the required license or use a permission set not associated with a specific license.`
 
 <br/>
-`ERROR:  [PERMISSION NAME] on [OBJECT NAME] can't be granted. Grant the permission using a permission set with the required license or use a permission set not associated with a specific license.`
-<br/>
 Salesforce Help Article to tackle the problem if the issue exists for multiple profiles<br/>
-![Anonymous Apex to remove CPQ Licensed Custom Object access from Profiles](https://help.salesforce.com/s/articleView?id=000390380&type=1)
+[Anonymous Apex to remove CPQ Licensed Custom Object access from Profiles](https://help.salesforce.com/s/articleView?id=000390380&type=1)
 
 If numerous profiles are in need of updates to be compliant post-upgrade to CPQ 228 (Winter '21), admins can use the query below to assist in removing CPQ related object permissions from custom profiles. Follow the steps below to execute the script in the Developer Console:
 1. Open the Developer Console
