@@ -1466,6 +1466,7 @@ SELECT Id,ApexClass.Name,Status,JobType,CreatedBy.Name FROM AsyncApexJob WHERE J
   <summary>List of Contents</summary>
   
   - [Generate Salesforce Authentication Token Using Postman](#generate-salesforce-authentication-token-using-postman)
+  - [Profile Error Due to Access Granted to Salesforce Licensed Custom Objects (LCO)](#profile-error-due-to-access-granted-to-salesforce-licensed-custom-objects-lco)
 </details>
 
 ## Generate Salesforce Authentication Token Using Postman
@@ -1502,6 +1503,64 @@ In Body Tab for the POST Request
 * Receive the Access Token in the Response Body
 
 ![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/65d2736f-27fa-411c-8a49-efa3ab2f6bad)
+
+## Profile Error Due to Access Granted to Salesforce Licensed Custom Objects (LCO)
+
+Beginning in the Winter '21 releases for CPQ and Advanced Approvals (AA), profiles are no longer able to grant access to any Salesforce Licensed Custom Objects (LCO). To interact with CPQ or AA related objects, users are required to have Permission Set Licenses (PSL) assigned. Validation error messages will appear when editing permissions in profiles or permission sets in 228 if any user belonging to the group does not have an appropriate license.
+
+<br/>
+`ERROR:  [PERMISSION NAME] on [OBJECT NAME] can't be granted. Grant the permission using a permission set with the required license or use a permission set not associated with a specific license.`
+<br/>
+Salesforce Help Article to tackle the problem if the issue exists for multiple profiles<br/>
+![Anonymous Apex to remove CPQ Licensed Custom Object access from Profiles](https://help.salesforce.com/s/articleView?id=000390380&type=1)
+
+If numerous profiles are in need of updates to be compliant post-upgrade to CPQ 228 (Winter '21), admins can use the query below to assist in removing CPQ related object permissions from custom profiles. Follow the steps below to execute the script in the Developer Console:
+1. Open the Developer Console
+2. Debug > Open Execute Anonymous Window (CTRL+E)
+3. Copy and paste code in Anonymous Window
+4. Check: Open Log
+5. Execute
+6. Check the 'Debug Only' filter box
+
+`**REMOVES ALL CPQ LCO + DEPENDENT OBJECT PERMISSIONS:`
+```
+// 1. Query for Permission set owned by custom profiles, exclude System Admin (By Customize Application perm)
+List<PermissionSet> profilePermSetIds = [select ProfileId from PermissionSet where IsOwnedByProfile = true and Profile.PermissionsModifyAllData=false and IsCustom=true];
+Set<Id> permSetIds = (new Map<Id,SObject>(profilePermSetIds)).keySet();
+System.debug('Profiles found: '+permSetIds.size());
+
+// 2. Define CPQ+AA objects (LCO + dependents) by hierarchy order for deletion
+String[] customLCOAndDependentObjects = new String[] {
+'SBQQ__QuoteLinePricingGuidance__c','SBQQ__QuoteDocument__c','SBQQ__QuoteLineConsumptionRate__c','SBQQ__QuoteLineConsumptionSchedule__c','SBQQ__QuoteLine__c','SBQQ__QuoteLineGroup__c','SBQQ__Quote__c',
+'SBQQ__PricingGuidanceTier__c','SBQQ__PricingGuidance__c',
+'SBQQ__ErrorCondition__c','SBQQ__ConfigurationRule__c','SBQQ__ProductAction__c','SBQQ__ProductRule__c',
+'SBQQ__LookupQuery__c','SBQQ__PriceCondition__c','SBQQ__PriceAction__c','SBQQ__PriceRule__c',
+'SBQQ__LineColumn__c','SBQQ__TemplateSection__c','SBQQ__QuoteTemplate__c',
+'SBQQ__SubscriptionConsumptionRate__c','SBQQ__SubscriptionConsumptionSchedule__c','SBQQ__SubscribedAsset__c','SBQQ__Subscription__c',
+'sbaa__ApprovalSnapshot__c','sbaa__Approval__c',
+'sbaa__ApprovalCondition__c','sbaa__ApprovalRule__c'
+};
+
+ObjectPermissions[] profileObjPerms;
+// 3. Iterate and delete, so not all done in 1 batch
+for(String objName : customLCOAndDependentObjects) {
+// Query for object permissions by object
+profileObjPerms = [SELECT Id FROM ObjectPermissions
+where Parent.Id in :permSetIds and SobjectType = :objName];
+System.debug('Object perms for object:'+objName+':'+profileObjPerms.size());
+try{
+// Uncomment below line before executing
+// delete profileObjPerms;
+} catch(Exception e){
+System.debug('Obj perms update failed due to the follow reason: '+ e + ',' + e.getStackTraceString());
+}
+}
+
+// 4. Query to ensure all the relevant object perms are cleared
+ObjectPermissions[] objPerms = [SELECT Id FROM ObjectPermissions
+where Parent.Id in :permSetIds and SobjectType = :customLCOAndDependentObjects];
+System.debug('Rerun Object Perm Records for CPQ & AA: '+ objPerms.size());
+```
 
 # Javascript Miscellanious
 [Back to main](#salesforce-common-things)
