@@ -1572,6 +1572,7 @@ System.debug('Rerun Object Perm Records for CPQ & AA: '+ objPerms.size());
   - [Generate Array for sequence of numbers](#generate-array-for-sequence-of-numbers)
   - [Get all permutations of an array](#get-all-permutations-of-an-array)
   - [Group elements in an Array](#group-elements-in-an-array)
+  - [Divide the array into chunks of a given size](#divide-the-array-into-chunks-of-a-given-size)
 </details>
 
 ## Extract only selected keys from array of objects
@@ -1759,5 +1760,20 @@ Result:
     { name: "goat", type: "meat", quantity: 23 },
     { name: "fish", type: "meat", quantity: 22 }
   ]
+}
+```
+
+## Divide the array into chunks of a given size
+[Back to List of Contents](#javascript-miscellanious)
+
+```
+var returnChunkArr = function(zipcodeArr,chunkSize){
+    var result = [];
+    var i = 0;
+    while(i < zipcodeArr.length){
+        result.push(zipcodeArr.slice(i,i + chunkSize));
+        i += chunkSize;
+    }
+    return result;
 }
 ```
