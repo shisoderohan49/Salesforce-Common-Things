@@ -1573,6 +1573,7 @@ System.debug('Rerun Object Perm Records for CPQ & AA: '+ objPerms.size());
   - [Get all permutations of an array](#get-all-permutations-of-an-array)
   - [Group elements in an Array](#group-elements-in-an-array)
   - [Divide the array into chunks of a given size](#divide-the-array-into-chunks-of-a-given-size)
+  - [Remove duplicates from an array of objects](#remove-duplicates-from-an-array-of-objects)
 </details>
 
 ## Extract only selected keys from array of objects
@@ -1775,5 +1776,23 @@ var returnChunkArr = function(zipcodeArr,chunkSize){
         i += chunkSize;
     }
     return result;
+}
+```
+
+## Remove duplicates from an array of objects
+[Back to List of Contents](#javascript-miscellanious)
+
+```
+function removeDuplicates(arr){
+    var properties = Object.keys(arr);
+    return arr.filter((value,index,self) => {
+        return index === self.findIndex(element => {
+            var result = true;
+            properties.forEach(prop => {
+                result = result && (element[prop] === value[prop]);
+            });
+            return result;
+        });
+    })
 }
 ```
