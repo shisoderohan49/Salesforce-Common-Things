@@ -1574,6 +1574,7 @@ System.debug('Rerun Object Perm Records for CPQ & AA: '+ objPerms.size());
   - [Group elements in an Array](#group-elements-in-an-array)
   - [Divide the array into chunks of a given size](#divide-the-array-into-chunks-of-a-given-size)
   - [Remove duplicates from an array of objects](#remove-duplicates-from-an-array-of-objects)
+  - [Dependent Async Tasks ](#dependent-async-tasks)
 </details>
 
 ## Extract only selected keys from array of objects
@@ -1794,5 +1795,82 @@ function removeDuplicates(arr){
             return result;
         });
     })
+}
+```
+
+## Dependent Async Tasks 
+[Back to List of Contents](#javascript-miscellanious)
+
+To solve problem of dependent async tasks, we create a class that will take the dependencies and a callback function as input.
+
+In the dependencies list, we will check if all the tasks in the list are completed or not, if it is completed then filter them out as we no longer need to run them.
+
+If there are not items in dependencies, invoke the callback directly.
+
+Otherwise, if there are dependencies pending, push them into the list, and execute them one by one. Once all are completed, invoke the callback.
+
+Use a flag to determine the state of the task, i.e completed or not.
+
+```
+class Task {
+    // accept the dependencies list
+    // and the callback
+    constructor(dependencies = [],job){
+        //filter the dependencies that are not yet completed
+        this.dependencies = dependencies ? dependencies.filter(dependency => dependency instanceof Task && !dependency.isCompleted) : [];
+        this.currentDependencyCount = this.dependencies.length;
+        
+        // the callback
+        this.job = job;
+        
+        // if current task is done
+        this.isCompleted = false;
+        
+        // store the dependencies list callback
+        // to execute is sequence;
+        this.subscribedList = [];
+        
+        //start the job
+        this.processJob();
+    }
+    
+    processJob() {
+        // if there is dependency
+        // subscribe to each of them
+        if (this.dependencies && this.dependencies.length) {
+            for (let dependency of this.dependencies){
+                dependency.subscribe(this.trackDependency.bind(this));
+            }
+        }
+        // else invoke the callback directly
+        else {
+            this.job(this.done.bind(this));
+        }
+    }
+    
+    // if all the dependencies are executed 
+    // invoke the callback
+    trackDependency(){
+        this.currentDependencyCount--;
+        if (this.currentDependencyCount === 0){
+            this.job(this.done.bind(this));
+        }
+    }
+    
+    // push the callback to the list
+    subscribe(cb) {
+        this.subscribedList.push(cb);
+    }
+    
+    // if the current task is done
+    // mark it as complete
+    // invoke all the dependency callbacks
+    // to print it in sequence
+    done() {
+        this.isCompleted = true;
+        for (const callback of this.subscribedList) {
+            callback();
+        }
+    }
 }
 ```
