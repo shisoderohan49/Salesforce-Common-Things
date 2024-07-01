@@ -339,6 +339,7 @@ Use `setPassword(userId, password)` if you don't want the user to be prompted to
   - [Implement Picklist Dependencies between two field comboboxes in LWC](#implement-picklist-dependencies-between-two-field-comboboxes-in-lwc)
   - [Execute functions of Child LWC Components from Parent LWC Component](#execute-functions-of-child-lwc-components-from-parent-lwc-component)
   - [Implement Debouncing in Lightning Web Component](#implement-debouncing-in-lightning-web-component)
+  - [Implement toast notifications in Flows](#implement-toast-notifications-in-flows)
   - [Implement Throttling](#implement-throttling)
 </details>
 
@@ -1305,6 +1306,82 @@ const throttledFetchData = throttle(fetchData,5000);
 //Add an event listener to the window scroll event that calls the throttledFetchData function
 window.addEventListener("scroll",throttledFetchData);
 ```
+
+## Implement toast notifications in Flows
+[Back to List of Contents](#lightning-web-components)
+
+[Reference](https://developer.salesforce.com/docs/component-library/bundle/lightning-flow-support/documentation)
+[Inspiration](https://hugolemos.medium.com/display-toast-notifications-in-flows-9a5c12c473ed)
+
+Deploy following lightning web component in org and then use it in flow.
+Set the Navigation Event Type according to requirement.
+
+`showToastFlow.html`
+```
+<template>
+</template>
+```
+
+`showToastFlow.js`
+```
+import { LightningElement,api} from 'lwc';
+import {FlowNavigationNextEvent,FlowNavigationFinishEvent} from 'lightning/flowSupport';
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+
+export default class ShowToastFlow extends LightningElement {
+
+    hasRendered = false;
+
+    @api title;
+    @api variant;
+    @api message;
+    //NEXT or FINISH
+    @api navigationEventType;
+
+    renderedCallback(){
+        this.showToastMessage(this.title,this.message,this.variant);
+        if(this.navigationEventType === 'NEXT'){
+            const navigateNextEvent = new FlowNavigationNextEvent();
+            this.dispatchEvent(navigateNextEvent);
+        }else if(this.navigationEventType === 'FINISH'){
+            const navigateFinishEvent = new FlowNavigationFinishEvent();
+            this.dispatchEvent(navigateFinishEvent);
+        }
+    }
+
+    async showToastMessage(title,message,variant){
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+        });
+        this.dispatchEvent(event);
+    }
+}
+```
+
+`showToastFlow.js-meta.xml`
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="title" label="Toast Title" type="string" role="inputOnly" />
+            <property name="message" label="Toast Message" type="string" role="inputOnly" />
+            <property name="variant" label="Toast Variant" type="string" role="inputOnly" />
+            <property name="navigationEventType" label="Navigation Event Type (NEXT or FINISH)" type="string" role="inputOnly" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
+```
+
+![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/37381a1d-60f2-498b-a13c-34f7ab236c86)
+
 
 # Aura Web Components
 [Back to main](#salesforce-common-things)
