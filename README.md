@@ -21,6 +21,7 @@
   - [Parsing JSON String in Apex with JSONParser class](#parsing-json-string-in-apex-with-jsonparser-class)
   - [Enable Debug Mode for a User using Apex in Execute Anonymous Window](#enable-debug-mode-for-a-user-using-apex-in-execute-anonymous-window)
   - [Reset password for a user easily using Apex in Execute Anonymous Window](#reset-password-for-a-user-easily-using-apex-in-execute-anonymous-window)
+  - [Create/Update Custom Metadata Using Apex](#createupdate-custom-metadata-using-apex)
 </details>
 
 ## Getting List of picklist values for a picklist field of a Object
@@ -315,6 +316,118 @@ If you specify true for sendUserEmail, the user is sent an email notifying them 
 Use `setPassword(userId, password)` if you don't want the user to be prompted to enter a new password when they log in.
 
 **Ensure that the email address that the user has is a valid email address**
+
+## Create/Update Custom Metadata Using Apex
+
+[Original Article From Panter Schools](https://www.pantherschools.com/create-update-custom-metadata-using-apex/)
+
+Steps - 
+1. **Create Custom Metadata**<br/>
+
+Navigate to Setup > Develop > Custom Metadata Types > New Custom Metadata Type > Create the Custom Metadata Type
+
+2. **Create a class and implement the Metadata.DeployCallback interface**<br/>
+
+```
+public class CreateUpdateMetadataUtils implements Metadata.DeployCallback {
+    
+}
+```
+
+3. **Implement handleResult method in the class**
+```
+public class CreateUpdateMetadataUtils implements Metadata.DeployCallback {
+    /* Below method recieves the 2 parameters 
+       1 - Metadata.DeployResult => Object of MetadataContainer class where this method has been implemented.
+       2 - Metadata.DeployCallbackContext => Object of the class where this method has been implemented
+   */
+    public void handleResult(Metadata.DeployResult result,
+                             Metadata.DeployCallbackContext context) {
+        if (result.status == Metadata.DeployStatus.Succeeded) {
+            // Deployment was successful
+        } else {
+            // Deployment was not successful
+        }
+    }
+}
+```
+
+4. **Prepare the Custom Metadata**<br/>
+
+Create the Object of `Metadata.CustomMetadata` as follows
+```
+Metadata.CustomMetadata customMetadata = new Metadata.CustomMetadata();
+customMetadata.fullName = 'Profile_Setting.Admin'
+customMetadata.label = 'Admin';
+```
+
+Value for `fullName` we need to provide the Qualified Name of the Custom MetadataType<br/>
+If Object Name of Metadata is 'Profile_Setting' and you want to create a record named Admin, then <br/>
+fullName will be `Profile_Setting.Admin` and <br/>
+label will be `Admin`.
+
+5. **Add field values to the Metadata Record**<br/>
+```
+/* Create the Object of CustomMetadataValue */
+Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
+/* Provide the API Name of the Field like Admin__c */
+customField.field = 'Profile_Full_Name__c';
+/* Provide the value for the field */
+customField.value = 'Admin';
+/* Add this field to the Metadata That we created */ 
+customMetadata.values.add(customField);
+
+/* If you wanted to add more than one field you need to repeat the above step OR You can use Map<String, Object> where Key is the Field API Name and value is the value for the field */
+
+/* In my example, I will create a separate method which is responsible for deploying the Custom Metadata Record */
+```
+
+6. **Create a Deploy Container**<br/>
+
+Let's create a deployed container that will be responsible for deploying the Custom Metadata Record.<br/>
+Create the DeployContainer class object<br/>
+`Metadata.DeployContainer mdContainer = new Metadata.DeployContainer()`<br/>
+Add the Custom Metadata in the DeployContainer using `addMetadata` method<br/>
+`mdContainer.addMetadata(customMetadata)`
+
+7. **Deploy the Custom Metadata**<br/>
+
+Create the object of our class<br/>
+`CreateUpdateMetadataUtils callback = new CreateUpdateMetadataUtils();`
+Deploy the Metadata using this code<br/>
+`Id jobId = Metadata.Operations.enqueueDeployment(mdContainer,callback)`
+
+The Final and complete class - 
+```
+public class CreateUpdateMetadataUtils implements Metadata.DeployCallback {
+    
+    public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
+        if (result.status == Metadata.DeployStatus.Succeeded) {
+            System.debug(' success : '+ result);
+        } else {
+            System.debug(' fail : '+ result);
+        }
+    }
+    
+    public static void createUpdateMetadata(String fullName, String label, Map<String, Object> fieldWithValuesMap){
+        Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
+        customMetadata.fullName = fullName;
+        customMetadata.label = label;
+        
+        for(String key : fieldWithValuesMap.keySet()){
+            Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
+            customField.field = key;
+            customField.value = fieldWithValuesMap.get(key); 
+            customMetadata.values.add(customField);
+        }
+        
+        Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
+        mdContainer.addMetadata(customMetadata);
+        CreateUpdateMetadataUtils callback = new CreateUpdateMetadataUtils();
+        Id jobId = Metadata.Operations.enqueueDeployment(mdContainer, callback);
+    }
+}
+```
 
 # Lightning Web Components
 [Back to main](#salesforce-common-things)
