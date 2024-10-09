@@ -22,6 +22,7 @@
   - [Enable Debug Mode for a User using Apex in Execute Anonymous Window](#enable-debug-mode-for-a-user-using-apex-in-execute-anonymous-window)
   - [Reset password for a user easily using Apex in Execute Anonymous Window](#reset-password-for-a-user-easily-using-apex-in-execute-anonymous-window)
   - [Create/Update Custom Metadata Using Apex](#createupdate-custom-metadata-using-apex)
+  - [Get Session Id in Execute Anonymous Window](#get-session-id-in-execute-anonymous-window)
 </details>
 
 ## Getting List of picklist values for a picklist field of a Object
@@ -318,6 +319,7 @@ Use `setPassword(userId, password)` if you don't want the user to be prompted to
 **Ensure that the email address that the user has is a valid email address**
 
 ## Create/Update Custom Metadata Using Apex
+[Back to List of Contents](#apex)
 
 [Original Article From Panter Schools](https://www.pantherschools.com/create-update-custom-metadata-using-apex/)
 
@@ -427,6 +429,13 @@ public class CreateUpdateMetadataUtils implements Metadata.DeployCallback {
         Id jobId = Metadata.Operations.enqueueDeployment(mdContainer, callback);
     }
 }
+```
+
+## Get Session Id in Execute Anonymous Window
+[Back to List of Contents](#apex)
+
+```
+System.debug('Session id '+UserInfo.getOrganizationId() + UserInfo.getSessionId().substring(15));
 ```
 
 # Lightning Web Components
