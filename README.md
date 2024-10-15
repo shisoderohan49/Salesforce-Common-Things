@@ -1674,6 +1674,7 @@ SELECT Id,MasterLabel,DeveloperName, LastModifiedDate, LastModifiedBy.Name,Descr
   
   - [Generate Salesforce Authentication Token Using Postman](#generate-salesforce-authentication-token-using-postman)
   - [Profile Error Due to Access Granted to Salesforce Licensed Custom Objects (LCO)](#profile-error-due-to-access-granted-to-salesforce-licensed-custom-objects-lco)
+  - [Using JSForce npm package for automating Tooling/Bulk API Requests](#using-jsforce-npm-package-for-automating-toolingbulk-api-requests)
 </details>
 
 ## Generate Salesforce Authentication Token Using Postman
@@ -1767,6 +1768,83 @@ System.debug('Obj perms update failed due to the follow reason: '+ e + ',' + e.g
 ObjectPermissions[] objPerms = [SELECT Id FROM ObjectPermissions
 where Parent.Id in :permSetIds and SobjectType = :customLCOAndDependentObjects];
 System.debug('Rerun Object Perm Records for CPQ & AA: '+ objPerms.size());
+```
+
+## Using JSForce npm package for automating Tooling/Bulk API Requests
+[Back to Miscellanious](#miscellanious)
+
+- Install the `JSforce` npm package and import it in your JS script  
+`npm install jsforce` OR `npm --force install jsforce` if required  
+`const jsforce = require('jsforce')`  
+
+- Retrieve the Session Id from Developer Console with this command<br/>
+  `System.debug('Session id '+UserInfo.getOrganizationId() + UserInfo.getSessionId().substring(15));`
+
+    
+Javascript function for creating a connection object (sid is your Session ID)
+```
+async function getConnectionObj(sid){
+    var conn = new jsforce.Connection({
+        instanceUrl: 'YOUR_INSTANCE_URL',
+        serverUrl: 'YOUR_SERVER_URL',
+        sessionId: sid
+    });
+    return conn;
+}
+```
+
+Code for retrieving results of Tooling API Query  
+```
+const conn = await getConnectionObj('YOUR_SESSION_ID');
+const result = await conn.tooling.query('YOUR_TOOLING_API_QUERY');
+var records = result.records;
+```
+
+Code for creating Bulk API Query Job
+```
+var requestBody = {
+    operation: 'query',
+    query: /services/data/v62.0/tooling/jobs/query
+}
+var recordStream = await conn.request({
+    method: 'POST',
+    url: 'REQUIRED_URL',
+    body: JSON.stringify(requestBody),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+```
+Output will be of the format 
+```
+
+HTTP/1.1 200 OK
+{
+    "id" : "750R0000000$H8AAU",
+    "operation" : "query",
+    "object" : "MetadataComponentDependency",
+    "createdById" : "005xx000001X9JAAS",
+    "createdDate" : "2020-04-09T17:51:02.000+0000",
+    "systemModstamp" : "2020-04-09T17:51:02.000+0000",
+    "state" : "UploadComplete",
+    "concurrencyMode" : "Parallel",
+    "contentType" : "CSV",
+    "apiVersion" : 49.0,
+    "lineEnding" : "LF",
+    "columnDelimiter" : "COMMA"
+}
+```
+After the Bulk API Job is Complete.<br/>
+Get the query job's results by running this request using the earlier job's ID
+```
+var resultURL = `/services/data/v62.0/tooling/jobs/query/${jobId}/results`;
+var jobResults = await conn.request({
+    method: 'GET',
+    url: resultURL,
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
 ```
 
 # Javascript Miscellanious
