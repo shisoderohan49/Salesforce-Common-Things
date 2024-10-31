@@ -1636,6 +1636,7 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
   - [Get All Permission Sets contained in a Permission Set Group](#get-all-permission-sets-contained-in-a-permission-set-group)
   - [Get All Asynchronous Jobs filtered by the job's Status, Created By User,Apex Class Name, Job Type](#get-all-asynchronous-jobs-filtered-by-the-jobs-status-created-by-userapex-class-name-job-type)
   - [Get Information about Flows From their Developer Names](#get-information-about-flows-from-their-developer-names)
+  - [Get All Profiles which have Edit Field Level Security for a Field](#get-all-profiles-which-have-edit-field-level-security-for-a-field)
 </details>
 
 ## Get All Permission Set and Permission Set Group Assignments to a User
@@ -1664,6 +1665,15 @@ SELECT Id,ApexClass.Name,Status,JobType,CreatedBy.Name FROM AsyncApexJob WHERE J
 
 ```
 SELECT Id,MasterLabel,DeveloperName, LastModifiedDate, LastModifiedBy.Name,Description FROM FlowDefinition WHERE DeveloperName IN ('FLOWDEVELOPERNAME1','FLOWDEVELOPERNAME2',FLOWDEVELOPERNAME3')
+```
+
+## Get All Profiles which have Edit Field Level Security for a Field
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT Id,Field,SObjectType,PermissionsRead,PermissionsEdit,Parent.Profile.Name FROM FieldPermissions 
+WHERE SObjectType = 'OBJECT_API_NAME' AND Field = 'OBJECT_API_NAME.FIELD_API_NAME' AND PermissionsEdit = true AND Parent.ProfileId != null 
+ORDER BY Parent.Profile.Name
 ```
 
 # Miscellanious
