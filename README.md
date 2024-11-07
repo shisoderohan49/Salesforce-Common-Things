@@ -1633,6 +1633,7 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
   <summary>List of Contents</summary>
 
   - [Get All Permission Set and Permission Set Group Assignments to a User](#get-all-permission-set-and-permission-set-group-assignments-to-a-user)
+  - [Get All Users that have been assigned a certain Permission Set](#get-all-users-that-have-been-assigned-a-certain-permission-set)
   - [Get All Permission Sets contained in a Permission Set Group](#get-all-permission-sets-contained-in-a-permission-set-group)
   - [Get All Asynchronous Jobs filtered by the job's Status, Created By User,Apex Class Name, Job Type](#get-all-asynchronous-jobs-filtered-by-the-jobs-status-created-by-userapex-class-name-job-type)
   - [Get Information about Flows From their Developer Names](#get-information-about-flows-from-their-developer-names)
@@ -1644,6 +1645,13 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
 
 ```
 SELECT Id,Assignee.Name,PermissionSetGroup.DeveloperName,PermissionSet.Name FROM PermissionSetAssignment WHERE Assignee.Name = 'Rohan Shisode'
+```
+
+## Get All Users that have been assigned a certain Permission Set
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT Id,AssigneeId,Assignee.Name,Assignee.Profile.Name,PermissionSet.Name FROM PermissionSetAssignment WHERE PermissionSet.Name = 'PERMISSION_SET_NAME'
 ```
 
 ## Get All Permission Sets contained in a Permission Set Group
