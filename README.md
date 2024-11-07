@@ -1636,6 +1636,7 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
   - [Get All Users that have been assigned a certain Permission Set](#get-all-users-that-have-been-assigned-a-certain-permission-set)
   - [Get All Permission Sets contained in a Permission Set Group](#get-all-permission-sets-contained-in-a-permission-set-group)
   - [Retrieve all Apex classes granted access within a Permission Set](#retrieve-all-apex-classes-granted-access-within-a-permission-set)
+  - [Retrieve all Permission Sets that grant access to an Apex Class](#retrieve-all-permission-sets-that-grant-access-to-an-apex-class)
   - [Get All Asynchronous Jobs filtered by the job's Status, Created By User,Apex Class Name, Job Type](#get-all-asynchronous-jobs-filtered-by-the-jobs-status-created-by-userapex-class-name-job-type)
   - [Get Information about Flows From their Developer Names](#get-information-about-flows-from-their-developer-names)
   - [Get All Profiles which have Edit Field Level Security for a Field](#get-all-profiles-which-have-edit-field-level-security-for-a-field)
@@ -1670,6 +1671,14 @@ SELECT SetupEntityType,SetupEntity.Name FROM SetupEntityAccess
 WHERE ParentId IN (SELECT Id FROM PermissionSet WHERE Name = 'PERMISSION_SET_NAME') 
 AND SetupEntityType = 'ApexClass' 
 ORDER BY SetupEntity.Name
+```
+
+## Retrieve all Permission Sets that grant access to an Apex Class
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT Name,(SELECT Id,Parent.Name FROM SetupEntityAccessItems) FROM ApexClass 
+WHERE Name = 'APEX_CLASS_NAME'
 ```
 
 ## Get All Asynchronous Jobs filtered by the job's Status, Created By User,Apex Class Name, Job Type
