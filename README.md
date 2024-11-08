@@ -463,6 +463,8 @@ System.debug('Session id '+UserInfo.getOrganizationId() + UserInfo.getSessionId(
   - [Implement Debouncing in Lightning Web Component](#implement-debouncing-in-lightning-web-component)
   - [Implement toast notifications in Flows](#implement-toast-notifications-in-flows)
   - [Implement Throttling](#implement-throttling)
+  - [Implement toast notifications in Flows](#implement-toast-notifications-in-flows)
+  - [Display Toast Message in multiple lines](#display-toast-message-in-multiple-lines)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -1504,6 +1506,54 @@ export default class ShowToastFlow extends LightningElement {
 
 ![image](https://github.com/shisoderohan49/Salesforce-Common-Things/assets/90911451/37381a1d-60f2-498b-a13c-34f7ab236c86)
 
+## Display Toast Message in multiple lines 
+[Back to List of Contents](#lightning-web-components)
+
+[Link](https://salesforce.stackexchange.com/questions/407814/how-to-display-toast-message-in-multiple-lines-using-lwc)
+
+Need to override the CSS to show the toast message in separate lines.
+- Create one Static Resource file for the CSS.
+`toastMessage.css`
+```
+.toastMessage {
+        white-space: break-spaces !important;
+}
+```
+Use this static resource in your LWC
+```
+import { LightningElement, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { loadStyle } from 'lightning/platformResourceLoader';
+import customCSS from '@salesforce/resourceUrl/toastCSS';
+export default class DataBinding extends LightningElement {
+    
+    @track isCSSLoaded = false;
+
+    renderedCallback() {
+
+        if (this.isCSSLoaded) return;
+        this.isCSSLoaded = true;
+        loadStyle(this, customCSS).then(() => {
+            console.log('css loaded successfully');
+        }).catch(error => {
+            console.log('error to load css');
+        });
+    }
+
+
+    handleToastMsg() {
+        var msg = 'First Message\nSecond Message\nThird Message';
+
+        const evt = new ShowToastEvent({
+            title: 'Toast Success',
+            message: msg,
+            variant: 'success',
+            mode: 'dismissable'
+        });
+        this.dispatchEvent(evt);
+    }
+}
+```
 
 # Aura Web Components
 [Back to main](#salesforce-common-things)
