@@ -1690,6 +1690,7 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
   - [Get All Asynchronous Jobs filtered by the job's Status, Created By User,Apex Class Name, Job Type](#get-all-asynchronous-jobs-filtered-by-the-jobs-status-created-by-userapex-class-name-job-type)
   - [Get Information about Flows From their Developer Names](#get-information-about-flows-from-their-developer-names)
   - [Get All Profiles which have Edit Field Level Security for a Field](#get-all-profiles-which-have-edit-field-level-security-for-a-field)
+  - [Retrieve All Permission Sets that provide Edit Access to a Field](#retrieve-all-permission-sets-that-provide-edit-access-to-a-field)
   - [Retrieve Read and Edit Permissions for all fields of a Specific Object for a given Profile](#retrieve-read-and-edit-permissions-for-all-fields-of-a-specific-object-for-a-given-profile)
 </details>
 
@@ -1753,6 +1754,13 @@ SELECT Id,MasterLabel,DeveloperName, LastModifiedDate, LastModifiedBy.Name,Descr
 SELECT Id,Field,SObjectType,PermissionsRead,PermissionsEdit,Parent.Profile.Name FROM FieldPermissions 
 WHERE SObjectType = 'OBJECT_API_NAME' AND Field = 'OBJECT_API_NAME.FIELD_API_NAME' AND PermissionsEdit = true AND Parent.ProfileId != null 
 ORDER BY Parent.Profile.Name
+```
+
+## Retrieve all Permission Sets that provide Edit Access to a Field
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT Parent.Name from FieldPermissions WHERE Field = 'SOBJECT_API_NAME.FIELD_API_NAME' and PermissionsEdit = true and Parent.IsOwnedByProfile = false
 ```
 
 ## Retrieve Read and Edit Permissions for all fields of a Specific Object for a given Profile
