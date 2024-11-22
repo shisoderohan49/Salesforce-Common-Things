@@ -1693,6 +1693,7 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
   - [Retrieve All Permission Sets that provide Edit Access to a Field](#retrieve-all-permission-sets-that-provide-edit-access-to-a-field)
   - [Retrieve Read and Edit Permissions for all fields of a Specific Object for a given Profile](#retrieve-read-and-edit-permissions-for-all-fields-of-a-specific-object-for-a-given-profile)
   - [Retrieve all components that reference or utilize an Apex Class - Tooling API](#retrieve-all-components-that-reference-or-utilize-an-apex-class-tooling-api)
+  - [Retrieve all dependencies of a Apex Class](#retrieve-all-dependencies-of-a-apex-class)
 </details>
 
 ## Get All Permission Set and Permission Set Group Assignments to a User
@@ -1783,6 +1784,18 @@ SELECT Id FROM ApexClass WHERE Name = 'APEX_CLASS_NAME'
 Then Run this Query 
 ```
 SELECT MetadataComponentName, MetadataComponentType, RefMetadataComponentName, RefMetadataComponentType FROM MetadataComponentDependency WHERE RefMetadataComponentId = 'APEX_CLASS_ID'
+```
+
+## Retrieve all dependencies of a Apex Class
+[Back to List of Contents](#useful-soql-queries)
+
+Retrieve the Id of the Apex Class 
+```
+SELECT Id FROM ApexClass WHERE Name = 'APEX_CLASS_NAME'
+```
+Then Run this Query
+```
+SELECT MetadataComponentName, MetadataComponentType, RefMetadataComponentName, RefMetadataComponentType FROM MetadataComponentDependency WHERE MetadataComponentId = 'APEX_CLASS_ID'
 ```
 
 # Miscellanious
