@@ -1807,6 +1807,7 @@ SELECT MetadataComponentName, MetadataComponentType, RefMetadataComponentName, R
   - [Generate Salesforce Authentication Token Using Postman](#generate-salesforce-authentication-token-using-postman)
   - [Profile Error Due to Access Granted to Salesforce Licensed Custom Objects (LCO)](#profile-error-due-to-access-granted-to-salesforce-licensed-custom-objects-lco)
   - [Using JSForce npm package for automating Tooling/Bulk API Requests](#using-jsforce-npm-package-for-automating-toolingbulk-api-requests)
+  - [Using JSForce package to get list of all components where certain Apex Classes are referenced](#using-jsforce-package-to-get-list-of-all-components-where-certain-apex-classes-are-referenced)
 </details>
 
 ## Generate Salesforce Authentication Token Using Postman
@@ -1977,6 +1978,48 @@ var jobResults = await conn.request({
         'Content-Type': 'application/json'
     }
 });
+```
+
+## Using JSForce package to get list of all components where certain Apex Classes are referenced
+
+```
+var jsforce = require('jsforce');
+
+async function getConnectionObj(sid){
+    var conn = new jsforce.Connection({
+        instanceUrl: 'INSTANCE_URL',
+        serverUrl: 'SERVER_URL',
+        sessionId: sid
+    });
+    return conn;
+}
+
+async function getApexClassDependencies(className){
+    var conn = await getConnectionObj('YOUR_SESSION_ID');
+    var query = (className) => {
+        return `SELECT Id FROM ApexClass WHERE Name = '${className}'`;
+    }
+
+    var idResult = await conn.query(query(className));
+    idResult = idResult.records[0].Id;
+
+    var dependencyQuery = (id) => {
+        return `SELECT MetadataComponentName, MetadataComponentType, RefMetadataComponentName, RefMetadataComponentType FROM MetadataComponentDependency WHERE RefMetadataComponentId= '${id}'`;
+    }
+    var queryResults = await conn.tooling.query(dependencyQuery(idResult));
+    queryResults = queryResults.records.map(({MetadataComponentName, MetadataComponentType, RefMetadataComponentName, RefMetadataComponentType}) => ({MetadataComponentName, MetadataComponentType, RefMetadataComponentName, RefMetadataComponentType}));
+    console.table(queryResults);
+}
+getApexClassDependencies('APEX_CLASS_NAME_1');
+
+async function multipleClassDependencies(classNames){
+    for(let className of classNames){
+        console.log(`Where is ${className} referenced ?`)
+        await getApexClassDependencies(className);
+    }
+}
+
+multipleClassDependencies(['APEX_CLASS_NAME_2', 'APEX_CLASS_NAME_3']);
 ```
 
 # Javascript Miscellanious
