@@ -465,6 +465,7 @@ System.debug('Session id '+UserInfo.getOrganizationId() + UserInfo.getSessionId(
   - [Implement Throttling](#implement-throttling)
   - [Implement toast notifications in Flows](#implement-toast-notifications-in-flows)
   - [Display Toast Message in multiple lines](#display-toast-message-in-multiple-lines)
+  - [Multiple Hyperlinks in a cell - Lightning Datatable Custom Datatype](#multiple-hyperlinks-in-a-cell---lightning-datatable-custom-datatype)
 </details>
 
 ## Row Selection in Lightning-Datatable Miscellanious Things
@@ -1553,6 +1554,53 @@ export default class DataBinding extends LightningElement {
         this.dispatchEvent(evt);
     }
 }
+```
+
+## Multiple Hyperlinks in a cell - Lightning Datatable Custom Datatype
+[Back to List of Contents](#lightning-web-components)
+
+`multipleUrlDatatable.js`
+```
+import LightningDatatable from "lightning/datatable";
+import multipleUrlTemplate from "./multipleUrlTemplate.html";
+
+export default class MultipleUrlDatatable extends LightningDatatable {
+    static customTypes = {
+        multipleUrl: {
+            template: multipleUrlTemplate,
+            standardCellLayout: false,
+            typeAttributes: [
+                "links"
+            ]
+        }
+    }
+}
+```
+  
+`multipleUrlTemplate.html`
+```
+<template>
+    <template for:each={typeAttributes.links} for:item="link">
+        <div key={link.value} >
+            <lightning-formatted-url value={link.value} label={link.label} target="_blank"></lightning-formatted-url>
+        </div>
+    </template>
+</template>
+```
+
+`multipleUrlDatatable.js-meta.xml`
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__Tab</target>
+    </targets>
+</LightningComponentBundle>
 ```
 
 # Aura Web Components
