@@ -23,6 +23,7 @@
   - [Reset password for a user easily using Apex in Execute Anonymous Window](#reset-password-for-a-user-easily-using-apex-in-execute-anonymous-window)
   - [Create/Update Custom Metadata Using Apex](#createupdate-custom-metadata-using-apex)
   - [Get Session Id in Execute Anonymous Window](#get-session-id-in-execute-anonymous-window)
+  - [Retrieve all Batch Classes from a list of given Apex Classes](#retrieve-all-batch-classes-from-a-list-of-given-apex-classes)
 </details>
 
 ## Getting List of picklist values for a picklist field of a Object
