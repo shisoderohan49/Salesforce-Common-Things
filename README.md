@@ -442,6 +442,7 @@ System.debug('Session id '+UserInfo.getOrganizationId() + UserInfo.getSessionId(
 ## Retrieve all Batch Classes from a list of given Apex Classes
 [Back to List of Contents](#apex)
 
+```
 List<String> classNames = new List<String>{'APEX_CLASS_1','APEX_CLASS_2','APEX_CLASS_3'};
 List<ApexClass> apexClasses = [SELECT Id,Name,ApiVersion,Body FROM ApexClass WHERE Name IN :classNames];
 List<String> batchClasses = new List<String>();
@@ -451,6 +452,7 @@ for(ApexClass iterator: apexClasses){
     }
 }
 System.debug(batchClasses);
+```
 
 # Lightning Web Components
 [Back to main](#salesforce-common-things)
