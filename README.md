@@ -1756,6 +1756,7 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
   - [Get All Profiles which have Edit Field Level Security for a Field](#get-all-profiles-which-have-edit-field-level-security-for-a-field)
   - [Retrieve All Permission Sets that provide Edit Access to a Field](#retrieve-all-permission-sets-that-provide-edit-access-to-a-field)
   - [Retrieve Read and Edit Permissions for all fields of a Specific Object for a given Profile](#retrieve-read-and-edit-permissions-for-all-fields-of-a-specific-object-for-a-given-profile)
+  - [Retrieve Read,Edit,Create,Delete,View All,Modify All Permissions of certain objects for given Profiles](#retrieve-readeditcreatedeleteview-allmodify-all-permissions-of-certain-objects-for-given-profiles)
   - [Retrieve all components that reference or utilize an Apex Class - Tooling API](#retrieve-all-components-that-reference-or-utilize-an-apex-class-tooling-api)
   - [Retrieve all dependencies of a Apex Class](#retrieve-all-dependencies-of-a-apex-class)
 </details>
@@ -1836,6 +1837,14 @@ SELECT Parent.Name from FieldPermissions WHERE Field = 'SOBJECT_API_NAME.FIELD_A
 SELECT Field,PermissionsRead,PermissionsEdit FROM FieldPermissions 
 WHERE SObjectType = 'OBJECT_API_NAME' AND Parent.Profile.Name = 'PROFILE_NAME'
 ORDER BY Field
+```
+
+## Retrieve Read,Edit,Create,Delete,View All,Modify All Permissions of certain objects for given profiles
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT Id,SobjectType,PermissionsRead,PermissionsEdit,PermissionsCreate,PermissionsDelete,PermissionsViewAllRecords,PermissionsModifyAllRecords,Parent.Profile.Name FROM ObjectPermissions
+WHERE SObjectType IN ('SOBJECT1_API_NAME','SOBJECT2_API_NAME') AND Parent.ProfileId != null AND Parent.Profile.Name IN ('PROFILE1_NAME','PROFILE2_NAME','PROFILE3_NAME')
 ```
 
 ## Retrieve all components that reference or utilize an Apex Class [Tooling API]
