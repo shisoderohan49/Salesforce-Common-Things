@@ -1759,6 +1759,7 @@ showCustomModal() returns a promise, which is useful if you want to get a refere
   - [Retrieve Read,Edit,Create,Delete,View All,Modify All Permissions of certain objects for given Profiles](#retrieve-readeditcreatedeleteview-allmodify-all-permissions-of-certain-objects-for-given-profiles)
   - [Retrieve all components that reference or utilize an Apex Class - Tooling API](#retrieve-all-components-that-reference-or-utilize-an-apex-class-tooling-api)
   - [Retrieve all dependencies of a Apex Class](#retrieve-all-dependencies-of-a-apex-class)
+  - [Retrieve all Query Configuration in Search Manager which impact certain Profiles](#retrieve-all-query-configuration-in-search-manager-which-impact-certain-profiles)
 </details>
 
 ## Get All Permission Set and Permission Set Group Assignments to a User
@@ -1869,6 +1870,13 @@ SELECT Id FROM ApexClass WHERE Name = 'APEX_CLASS_NAME'
 Then Run this Query
 ```
 SELECT MetadataComponentName, MetadataComponentType, RefMetadataComponentName, RefMetadataComponentType FROM MetadataComponentDependency WHERE MetadataComponentId = 'APEX_CLASS_ID'
+```
+
+## Retrieve all Query Configuration in Search Manager which impact certain Profiles
+[Back to List of Contents](#useful-soql-queries)
+
+```
+SELECT Id,SearchCustomization.DeveloperName,Profile.Name FROM ProfileSearchCustomization WHERE Profile.Name IN ('PROFILE1_NAME','PROFILE2_NAME','PROFILE3_NAME')
 ```
 
 # Miscellanious
